@@ -1,0 +1,6 @@
+- name: "{{ bgd_role }} service"
+  service:
+    name: "{{ bgd_service }}"
+    state: restarted
+  become: yes
+

@@ -1,0 +1,3 @@
+bgd_server: "localhost"
+bgd_role: "worker"
+bgd_service: "bgd_worker.service" # This MUST match the plist file in templates

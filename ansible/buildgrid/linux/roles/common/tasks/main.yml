@@ -1,0 +1,33 @@
+- name: Install virtualenv
+  pip:
+      name: virtualenv
+  environment:
+      PATH: "{{ path }}"
+
+- name: Installs buildgrid (with bgd virtualenv)
+  pip:
+      name: git+{{ buildgrid_repo }}
+      virtualenv: "{{ bgd_venv }}"
+      virtualenv_command: "{{ ansible_python_interpreter }} -m venv"
+      state: forcereinstall
+  environment:
+      PATH: "{{ path }}"
+  become: yes
+  notify:
+      - "{{ bgd_role }} service"
+
+- name: Create buildgrid config directory
+  file:
+    path: "{{ buildgrid_config_dir }}"
+    state: directory
+  become: yes
+
+- name: Create launchd service for buildgrid worker
+  template:
+      src: "{{ bgd_service }}"
+      dest: "{{ daemons_dir }}"
+  become: yes
+  vars:
+      buildgrid_path: "{{ bgd_venv }}"
+  notify:
+      - "{{ bgd_role }} service"

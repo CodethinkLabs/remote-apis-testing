@@ -1,0 +1,13 @@
+[Unit]
+Description=Buildgrid server
+After=network-online.target
+
+[Service]
+Environment="LC_ALL=C.UTF-8"
+ExecStart={{ bgd_venv }}/bgd server start {{ buildgrid_config_dir }}/server.conf -vv
+User=root
+LimitNOFILE=49152
+
+[Install]
+WantedBy=multi-user.target
+

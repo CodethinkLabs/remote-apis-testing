@@ -1,0 +1,6 @@
+buildgrid_repo: https://gitlab.com/BuildGrid/buildgrid.git
+ansible_python_interpreter: "/usr/local/bin/python3"
+bgd_venv: "/usr/local/buildgrid"
+daemons_dir: "/etc/systemd/system"
+path: "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+buildgrid_config_dir: "/etc/buildgrid"

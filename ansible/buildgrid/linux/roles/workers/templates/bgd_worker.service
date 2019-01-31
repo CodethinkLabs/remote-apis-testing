@@ -1,0 +1,13 @@
+[Unit]
+Description=Buildgrid worker
+After=network-online.target
+
+[Service]
+Environment="LC_ALL=C.UTF-8"
+ExecStart={{ bgd_venv }}/bgd bot -v --remote=http://{{ bgd_server }}:50051 --parent=main host-tools
+User=root
+LimitNOFILE=49152
+
+[Install]
+WantedBy=multi-user.target
+

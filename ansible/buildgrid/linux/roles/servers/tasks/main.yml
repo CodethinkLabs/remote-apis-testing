@@ -1,0 +1,7 @@
+- name: Configure buildgrid server
+  copy:
+    src: "server.conf"
+    dest: "{{ buildgrid_config_dir }}/{{ server_config }}"
+  become: yes
+  notify:
+      - "{{ bgd_role }} service"
