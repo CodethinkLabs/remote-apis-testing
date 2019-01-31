@@ -1,0 +1,3 @@
+dependencies:
+  - role: bazel
+  - role: tf-base-deps

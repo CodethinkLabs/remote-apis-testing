@@ -1,0 +1,12 @@
+[Unit]
+Description=Bazel BuildBarn Runner
+After=network-online.target
+
+[Service]
+Environment="LC_ALL=C.UTF-8"
+ExecStart={{ bazel_buildbarn_install_path }}/bbb_runner {{ bbb_runner_execution_parameters }}
+User=root
+LimitNOFILE=49152
+
+[Install]
+WantedBy=multi-user.target

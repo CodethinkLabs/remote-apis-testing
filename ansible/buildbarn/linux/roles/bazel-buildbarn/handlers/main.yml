@@ -1,0 +1,11 @@
+- name: "{{ bbb_component }} service"
+  service:
+    name: "{{ bbb_component }}"
+    state: restarted
+  become: yes
+
+- name: bbb_runner service
+  service:
+    name: bbb_runner.service
+    state: restarted
+  become: yes

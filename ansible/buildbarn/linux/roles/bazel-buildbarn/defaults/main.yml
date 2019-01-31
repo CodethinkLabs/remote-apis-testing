@@ -1,0 +1,49 @@
+ansible_python_interpreter: "/usr/bin/python3"
+
+bazel_buildbarn_repo: "https://github.com/EdSchouten/bazel-buildbarn.git"
+bbb_component: "" # Needs to be defined in the playbook
+bbb_config_needed: false
+bbb_config_file: ""
+bbb_web_listen_address: "localhost:80"
+bbb_instance: "local"
+bbb_cas_addr: "localhost"
+bbb_ac_addr: "localhost"
+bbb_cas_endpoint: "{{ bbb_cas_addr }}:8982"
+bbb_ac_endpoint: "{{ bbb_ac_addr }}:8982"
+
+bazel_buildbarn_build_path: "/tmp/bazel_buildbarn"
+bazel_buildbarn_install_path: "/usr/local/bin"
+daemons_dir: "/etc/systemd/system"
+path: "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$HOME/bin:$PATH"
+
+bazel_binary: "$HOME/bin/bazel"
+
+# Bazel buildbarn config
+bazel_buildbarn_service : "bbb_storage.service"
+bazel_buildbarn_config_dir: "/etc"
+bazel_buildbarn_num_open_files: 8192 # Dependent on expected load
+
+# bbb_frontend execution config
+bbb_scheduler_addr: "localhost"
+bbb_scheduler_endpoint: "{{ bbb_scheduler_addr }}:8981"
+bbb_frontend_scheduler: "{{ bbb_instance }}|{{ bbb_scheduler_endpoint }}"
+bbb_frontend_config: "-blobstore-config {{ bazel_buildbarn_config_dir }}/{{ bbb_config_file }}"
+bbb_frontend_execution_parameters: "-scheduler {{ bbb_frontend_scheduler }} {{ bbb_frontend_config }} -web.listen-address {{ bbb_web_listen_address }}"
+
+# Bazel buildbarn config
+bbb_storage_ac_dir: "/mnt/cache/storage-ac"
+bbb_storage_cas_dir: "/mnt/cache/storage-cas"
+bbb_storage_execution_parameters: "-blobstore-config {{ bazel_buildbarn_config_dir }}/{{ bbb_config_file }} -web.listen-address {{ bbb_web_listen_address  }}"
+
+# bbb_worker execution config
+bbb_worker_config: "{{ bazel_buildbarn_config_dir }}/{{ bbb_config_file }}"
+bbb_worker_build: "/mnt/cache/build"
+bbb_worker_cache: "/mnt/cache/cache"
+bbb_worker_concurrency: "16"
+bbb_worker_runner: "\"unix://${CURWD}/runner\""
+
+bbb_worker_scheduler: "-scheduler {{ bbb_scheduler_endpoint }}"
+bbb_worker_execution_parameters: "-blobstore-config {{ bbb_worker_config }} -build-directory {{ bbb_worker_build }} -cache-directory {{ bbb_worker_cache }} -concurrency {{ bbb_worker_concurrency }} -runner {{ bbb_worker_runner }} {{ bbb_worker_scheduler }} -web.listen-address {{ bbb_web_listen_address  }}"
+
+# bbb-runner execution parameters
+bbb_runner_execution_parameters: "-build-directory {{bbb_worker_build}} -listen-path ${CURWD}/runner"

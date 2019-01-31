@@ -1,0 +1,27 @@
+- name: get base dependencies
+  apt:
+    name: 
+      - unzip
+      - git
+      - openjdk-8-jdk
+      - python
+      - python3-pip
+    update_cache: yes
+  become: yes
+
+- name: get tensorflow pip dependencies
+  pip:
+    name:
+      - six 
+      - numpy 
+      - wheel 
+      - mock
+  become: yes
+
+- name: get keras deps
+  pip:
+    name:
+      - keras_applications==1.0.6
+      - keras_preprocessing==1.0.5
+    extra_args: --no-deps
+  become: yes

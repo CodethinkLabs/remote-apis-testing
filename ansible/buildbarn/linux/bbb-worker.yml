@@ -1,0 +1,12 @@
+- hosts: bbb-workers
+  roles:
+    - go
+    - bazel
+    - tf-base-deps
+    - bazel-buildbarn
+
+  vars:
+    bbb_component: "bbb_worker"
+    bbb_config_needed: true
+    bbb_config_file: "frontend-worker-blobstore.conf"
+    bbb_web_listen_address: "localhost:7984"
