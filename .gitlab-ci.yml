@@ -1,0 +1,29 @@
+variables:
+  GET_SOURCES_ATTEMPTS: 3
+
+stages:
+  - test
+
+test_re:
+  image: fedora:29
+  stage: test
+  script:
+    - dnf install -y ansible wget unzip python3
+    - wget https://releases.hashicorp.com/terraform/0.11.11/terraform_0.11.11_linux_amd64.zip
+    - unzip terraform_0.11.11_linux_amd64.zip -d /usr/bin/
+    - terraform --version
+    - pip3 install terraform2ansible/
+    - cd terraform/
+    - terraform init
+    - export AWS_ACCESS_KEY_ID="${AWS_ACCESS_KEY_ID}"
+    - export AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY}"
+    - terraform plan -var ssh_key_name="jjardon" -var clients_number=1
+    - terraform apply -var ssh_key_name="jjardon" -var clients_number=1 -auto-approve
+    - terraform output | terraform2ansible
+    - cd ..
+    - ansible-playbook -i terraform/hosts ansible/buildbarn/linux/bbb-all.yml
+    - ansible-playbook -i terraform/hosts ansible/buildbarn/linux/bbb-client.yml
+  after_script:
+    - cd terraform
+    - terraform destroy -var ssh_key_name="jjardon" -auto-approve
+  when: manual
