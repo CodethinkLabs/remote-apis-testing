@@ -1,0 +1,16 @@
+- name: get base dependencies
+  apt:
+    name: 
+      - unzip
+      - git
+      - openjdk-8-jdk
+      - patch
+    update_cache: yes
+  become: yes
+
+- name: setup tensorflow config dir
+  file:
+    path: /etc/tensorflow
+    state: directory
+  become: yes
+

@@ -1,0 +1,8 @@
+- hosts: bbb-scheduler
+  roles:
+    - go
+    - bazel
+    - bazel-buildbarn
+  vars:
+    bbb_component: "bbb_scheduler"
+    bbb_web_listen_address: "localhost:7981"

@@ -1,0 +1,11 @@
+- hosts: bbb-storage
+  roles:
+    - go
+    - bazel
+    - bazel-buildbarn
+
+  vars:
+    bbb_component: "bbb_storage"
+    bbb_config_needed: true
+    bbb_config_file: "storage-blobstore.conf"
+    bbb_web_listen_address: "localhost:7982"

@@ -1,0 +1,3 @@
+cache_mount_point: "/mnt/cache"
+nvme_mount: "/dev/sdh" # This is the device name specified by the volume in AWS
+

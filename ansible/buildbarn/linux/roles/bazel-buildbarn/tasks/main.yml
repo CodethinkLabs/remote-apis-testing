@@ -1,0 +1,111 @@
+- name: get base dependencies
+  apt:
+    name:
+      - git
+      - build-essential
+  become: yes
+
+- name: Clones bazel buildbarn
+  git:
+    repo: "{{ bazel_buildbarn_repo }}"
+    version: master
+    dest: "{{ bazel_buildbarn_build_path }}"
+    update: yes
+
+- name: Build bazel buildbarn component
+  shell: "{{ bazel_binary }} build //cmd/{{ bbb_component }}:{{ bbb_component }}"
+  args:
+      chdir: "{{ bazel_buildbarn_build_path }}"
+  environment:
+      PATH: "{{ path }}"
+
+# Only build the runner when it is a worker
+- name: Build bazel buildbarn runner
+  shell: "{{ bazel_binary }} build //cmd/bbb_runner:bbb_runner"
+  args:
+      chdir: "{{ bazel_buildbarn_build_path }}"
+  environment:
+      PATH: "{{ path }}"
+  when: bbb_component == "bbb_worker"
+
+- name: Install bazel buildbarn component
+# Copies the executable somewhere more useful
+  copy:
+      remote_src: yes
+      src: "{{ bazel_buildbarn_build_path }}/bazel-bin/cmd/{{ bbb_component }}/linux_amd64_pure_stripped/{{ bbb_component }}"
+      dest: "{{ bazel_buildbarn_install_path }}/{{ bbb_component }}"
+      mode: "preserve"
+  become: yes
+
+# Only install the runner when it is a worker
+- name: Install bazel buildbarn runner
+  copy:
+      remote_src: yes
+      src: "{{ bazel_buildbarn_build_path }}/bazel-bin/cmd/bbb_runner/linux_amd64_pure_stripped/bbb_runner"
+      dest: "{{ bazel_buildbarn_install_path }}/bbb_runner"
+      mode: "preserve"
+  become: yes
+  notify:
+      - "bbb_runner service"
+  when: bbb_component == "bbb_worker"
+
+- include_role:
+    name: mount_ebs
+  when: bbb_component == "bbb_storage" or bbb_component == "bbb_worker"
+
+- file:
+    path: "{{ bbb_worker_cache }}"
+    state: directory
+  become: yes
+  when: bbb_component == "bbb_worker"
+
+- file:
+    path: "{{ bbb_worker_build }}"
+    state: directory
+  become: yes
+  when: bbb_component == "bbb_worker"
+
+- file:
+    path: "{{ bbb_storage_ac_dir }}"
+    state: directory
+  become: yes
+  when: bbb_component == "bbb_storage"
+
+- file:
+    path: "{{ bbb_storage_cas_dir }}"
+    state: directory
+  become: yes
+  when: bbb_component == "bbb_storage"
+
+- name: Setup bazel buildbarn config
+  file:
+    path: "{{ bazel_buildbarn_config_dir }}"
+    state: directory
+  become: yes
+  when: bbb_config_needed
+
+- name: Copy bazel buildbarn config
+  template:
+    src: "{{ bbb_config_file }}"
+    dest: "{{ bazel_buildbarn_config_dir }}/"
+  notify:
+      - "{{ bbb_component }} service"
+  become: yes
+  when: bbb_config_needed
+
+- name: Create bbb systemd file
+  template:
+      src: "{{ bbb_component }}.service"
+      dest: "{{daemons_dir}}"
+  become: yes
+  notify:
+      - "{{ bbb_component }} service"
+
+- name: Create bbb systemd file
+  template:
+      src: "bbb_runner.service"
+      dest: "{{daemons_dir}}"
+  become: yes
+  notify:
+      - "bbb_runner service"
+  when: bbb_component == "bbb_worker"

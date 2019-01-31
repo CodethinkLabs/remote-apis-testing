@@ -70,3 +70,15 @@ When you are done with your testing, you can destroy the cluster with:
 ```
 $ terraform destroy
 ```
+
+# ansible
+
+These are a series of ansible playbooks that will
+- Deploy a base buildbarn implementation
+- Deploy clients that will build the tensorflow project using remote caching
+
+## Usage
+
+```ansible-playbook -i <inventory_file> ansible/<PLAYBOOK>.yml --forks N```
+
+Please follow the `README.md` in the `buildbarn/linux/` folder.
