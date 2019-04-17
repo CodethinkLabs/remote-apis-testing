@@ -1,13 +1,35 @@
-# remote-apis-testing
+## Remote Execution API test suite
 
-This project contains automation to test all the Remote Execution implementations
+This project provides a test suite designed to be an automated and independent 'acid test' for the [Remote Execution API](https://github.com/bazelbuild/remote-apis) clients and server implementations.
+
+Initial targets include:
+* [Bazel](https://bazel.build/)
+* [Buildbarn](https://github.com/EdSchouten/bazel-buildbarn)
+* [Buildgrid](https://gitlab.com/BuildGrid/buildgrid)
+
+Potential additional targets are:
+* [RECC](https://gitlab.com/bloomberg/recc)
+* [BuildStream](https://gitlab.com/BuildStream/buildstream)
+* [BuildFarm](https://github.com/uber/bazel-buildfarm)
+
+The initial aim is to test the latest version of Bazel against the latest versions of Buildbarn and BuildGrid on a continous basis, producing a matrix which could (eventually) look something like the following - over-simplified and hypothetical - example:
+
+| --- | BuildGrid | BuildFarm | Buildbarn |
+| -------- | -------- | -------- | -------- | 
+| Bazel  | Success | Success | Success |
+| BuildStream  | Success | Fail | Success |
+| RECC | Fail | Success | Fail |
+
+The initial test will be builds of [Absiel](https://abseil.io/) and [Tensorflow](https://www.tensorflow.org/). This will be achieved using Gitlab CI, terraform and ansible, with cloud-backed infra. See below for details on how to set this up.
+
+As a later step, we may want to develop more granular testing of the API, running through all of the gRPC calls and assessing them against the protocol defined in the API.
 
 The repo is structured in 3 folders:
 - terraform/
 - terraform2ansible/
 - ansible/
 
-## Terraform
+### Terraform
 
 The terraform folder have instructions to provision a cluster of machines:
 
@@ -71,13 +93,13 @@ When you are done with your testing, you can destroy the cluster with:
 $ terraform destroy
 ```
 
-# ansible
+### ansible
 
 These are a series of ansible playbooks that will
 - Deploy a base buildbarn implementation
 - Deploy clients that will build the tensorflow project using remote caching
 
-## Usage
+### Usage
 
 ```ansible-playbook -i <inventory_file> ansible/<PLAYBOOK>.yml --forks N```
 
