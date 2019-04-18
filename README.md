@@ -5,7 +5,7 @@ This project provides a test suite designed to be an automated and independent '
 Initial targets include:
 * [Bazel](https://bazel.build/)
 * [Buildbarn](https://github.com/EdSchouten/bazel-buildbarn)
-* [Buildgrid](https://gitlab.com/BuildGrid/buildgrid)
+* [BuildGrid](https://gitlab.com/BuildGrid/buildgrid)
 
 Potential additional targets are:
 * [RECC](https://gitlab.com/bloomberg/recc)
