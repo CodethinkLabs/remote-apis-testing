@@ -1,6 +1,6 @@
 ## Remote Execution API test suite
 
-This project provides a test suite designed to be an automated and independent 'acid test' for the [Remote Execution API](https://github.com/bazelbuild/remote-apis) clients and server implementations.
+This project provides a test suite designed to be an automated and independent 'acid test' for the [Remote Execution API](https://github.com/bazelbuild/remote-apis) clients and server implementations. Chat with us on slack, our invite link is http://tiny.cc/tihy5y.
 
 Initial targets include:
 * [Bazel](https://bazel.build/)
