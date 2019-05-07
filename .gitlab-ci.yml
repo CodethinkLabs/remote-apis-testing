@@ -10,6 +10,18 @@ stages:
   - curl https://bazel.build/bazel-release.pub.gpg | apt-key add -
   - apt update && apt install -y bazel
 
+build-docker-bazel-build-warpper:
+  stage: build-re-implementations
+  image: docker:stable
+  tags:
+    - privileged
+  services:
+    - docker:dind
+  script:
+    - docker login -u $DOCKER_USER -p $DOCKER_PASS
+    - (cd docker && docker build -t remoteapistesting/bazel-build:$CI_PIPELINE_ID -f bazel-build.Dockerfile .)
+    - docker push remoteapistesting/bazel-build:$CI_PIPELINE_ID
+
 build-buildbarn-remote-execution:
   stage: build-re-implementations
   image: ubuntu:18.04
