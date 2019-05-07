@@ -1,0 +1,10 @@
+#!/bin/bash
+
+set -x
+
+git_repo=$1
+bazel_target=$2
+
+git clone $git_repo repo
+cd repo
+bazel build $bazel_target
