@@ -44,6 +44,18 @@ stages:
   - apt install -y kubectl
   - aws-iam-authenticator version
 
+build-docker-bazel-build-warpper:
+  stage: build-images-and-terraform
+  image: docker:stable
+  tags:
+    - privileged
+  services:
+    - docker:dind
+  script:
+    - docker login -u $DOCKER_USER -p $DOCKER_PASS
+    - (cd docker && docker build -t remoteapistesting/bazel-build:$CI_PIPELINE_ID -f bazel-build.Dockerfile .)
+    - docker push remoteapistesting/bazel-build:$CI_PIPELINE_ID
+
 build-buildbarn-remote-execution:
   stage: build-images-and-terraform
   image: $BASE_IMAGE
