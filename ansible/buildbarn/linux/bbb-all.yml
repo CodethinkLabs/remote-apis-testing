@@ -1,4 +1,0 @@
-- import_playbook: bbb-frontend.yml
-- import_playbook: bbb-storage.yml
-- import_playbook: bbb-scheduler.yml
-- import_playbook: bbb-worker.yml

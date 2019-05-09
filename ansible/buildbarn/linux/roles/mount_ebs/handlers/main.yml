@@ -1,3 +1,0 @@
-- name: "Reboot mounts"
-  reboot:
-  become: yes

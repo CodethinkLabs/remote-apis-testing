@@ -1,8 +1,0 @@
-[workers]
-worker-1 ansible_ssh_host=linux-machine ansible_ssh_user=ubuntu
-
-[servers]
-server-1 ansible_ssh_host=linux-machine ansible_ssh_user=ubuntu
-
-[bazel-client-linux]
-client-1 ansible_ssh_host=linux-machine ansible_ssh_user=root

@@ -1,5 +1,0 @@
-bazel_version: "0.20.0"
-bazel_release_url: "https://github.com/bazelbuild/bazel/releases/download/{{ bazel_version }}/bazel-{{ bazel_version }}-installer-linux-x86_64.sh"
-
-# Change for Linux??
-path: "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/{{ ansible_user_id }}/bin"

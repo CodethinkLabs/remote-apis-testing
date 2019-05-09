@@ -1,7 +1,0 @@
-go_version: "1.11.4"
-go_release_url: "https://dl.google.com/go/go{{ go_version }}.linux-amd64.tar.gz"
-
-go_install_path: "/usr/local/bin"
-
-# Change for linux??
-path: "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/{{ ansible_user_id }}/bin"
