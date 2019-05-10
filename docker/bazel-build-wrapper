@@ -18,4 +18,4 @@ cat /src/workspace >> WORKSPACE
 
 # Execute bazel build
 set -x
-bazel --bazelrc=/src/bazelrc build $bazel_args
+/root/.bazel/bin/bazel --bazelrc=/src/bazelrc build $bazel_args
