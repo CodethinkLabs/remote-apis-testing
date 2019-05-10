@@ -1,7 +1,27 @@
-build --define with_default_optimizations=true
-build --spawn_strategy=remote
-build --genrule_strategy=remote
-build --remote_instance_name=ubuntu16-04
-build --action_env=PATH=/bin:/usr/bin
 build --experimental_strict_action_env
+build --genrule_strategy=remote
+build --spawn_strategy=remote
+build --strategy=Closure=remote
+build --strategy=Javac=remote
+
+# From https://github.com/bazelbuild/bazel-toolchains/blob/master/configs/ubuntu16_04_clang/1.1/toolchain.bazelrc
+build --action_env=BAZEL_DO_NOT_DETECT_CPP_TOOLCHAIN=1
+build --crosstool_top=@buildbarn_toolchain//configs/ubuntu16_04_clang/1.1/bazel_0.22.0/default:toolchain
+build --extra_execution_platforms=@buildbarn_toolchain//configs/ubuntu16_04_clang/1.1:rbe_ubuntu1604
+build --extra_toolchains=@buildbarn_toolchain//configs/ubuntu16_04_clang/1.1/bazel_0.22.0/cpp:cc-toolchain-clang-x86_64-default
+build --host_java_toolchain=@bazel_tools//tools/jdk:toolchain_hostjdk8
+build --host_javabase=@buildbarn_toolchain//configs/ubuntu16_04_clang/1.1:jdk8
+build --host_platform=@buildbarn_toolchain//configs/ubuntu16_04_clang/1.1:rbe_ubuntu1604
+build --java_toolchain=@bazel_tools//tools/jdk:toolchain_hostjdk8
+build --javabase=@buildbarn_toolchain//configs/ubuntu16_04_clang/1.1:jdk8
+build --platforms=@buildbarn_toolchain//configs/ubuntu16_04_clang/1.1:rbe_ubuntu1604
+# Additional settings.
+build --action_env=PATH=/bin:/usr/bin
+build --cpu=k8
+build --host_cpu=k8
+
+# From https://github.com/buildbarn/bb-deployments README.md
+build --remote_executor=aeb46e7d26c1c11e98a1e020973a4bd4-1379016679.eu-west-1.elb.amazonaws.com:8980
+
 build --jobs=16
+build --remote_instance_name=ubuntu16-04
