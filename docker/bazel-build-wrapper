@@ -1,10 +1,21 @@
 #!/bin/bash
 
-set -x
-
+# First argument is the git repo to build with Bazel
 git_repo=$1
-bazel_target=$2
+# All the remaining arguments will be passed to `bazel build`
+bazel_args="${@:2}"
+
+echo "## bazelrc file:"
+cat bazelrc
+echo "## end of bazelrc"
 
 git clone $git_repo repo
+
 cd repo
-bazel build $bazel_target
+
+# Append toolchain to the workspace
+cat /src/workspace >> WORKSPACE
+
+# Execute bazel build
+set -x
+bazel --bazelrc=/src/bazelrc build $bazel_args

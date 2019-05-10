@@ -1,0 +1,7 @@
+build --define with_default_optimizations=true
+build --spawn_strategy=remote
+build --genrule_strategy=remote
+build --remote_instance_name=ubuntu16-04
+build --action_env=PATH=/bin:/usr/bin
+build --experimental_strict_action_env
+build --jobs=16

@@ -8,4 +8,8 @@ RUN apt install -yq gnupg
 RUN curl https://bazel.build/bazel-release.pub.gpg | apt-key add -
 RUN apt update && apt -yq install bazel
 
+WORKDIR /src
+
 COPY bazel-build-wrapper /bin/bazel-build-wrapper
+COPY bazelrc /src/bazelrc
+COPY workspace /src/workspace
