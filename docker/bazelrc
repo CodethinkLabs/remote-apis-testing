@@ -21,7 +21,6 @@ build --cpu=k8
 build --host_cpu=k8
 
 # From https://github.com/buildbarn/bb-deployments README.md
-build --remote_executor=aeb46e7d26c1c11e98a1e020973a4bd4-1379016679.eu-west-1.elb.amazonaws.com:8980
 
 build --jobs=16
 build --remote_instance_name=ubuntu16-04
