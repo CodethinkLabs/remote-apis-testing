@@ -14,7 +14,13 @@ git clone $git_repo repo
 cd repo
 
 # Append toolchain to the workspace
+sed -i -e 's/\(bazel_toolchains\)/\1_old/' WORKSPACE
 cat /src/workspace >> WORKSPACE
+
+
+echo "## WORKSPACE file:"
+cat WORKSPACE
+echo "## end of WORKSPACE"
 
 # Execute bazel build
 set -x
