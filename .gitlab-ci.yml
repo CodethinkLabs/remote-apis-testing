@@ -112,6 +112,7 @@ kubernetes-create-job:
       for service in frontend scheduler-ubuntu16-04 storage worker-ubuntu16-04; do
         sed -i "s|:latest|:$CI_PIPELINE_ID|g" kubernetes/buildbarn/${service}.yaml
       done
+    - sed -i "s|:latest|:$CI_PIPELINE_ID|g" kubernetes/jobs/buildbarn-client.yml
     - kubectl create -f kubernetes/buildbarn/
     - kubectl -n buildbarn rollout status deployment.apps/scheduler-ubuntu16-04
     - kubectl -n buildbarn rollout status deployment.apps/frontend
