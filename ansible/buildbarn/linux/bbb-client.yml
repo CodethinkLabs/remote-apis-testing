@@ -1,4 +1,0 @@
-- hosts: clients
-  roles:
-    - bazel
-    - bazel-client-re-linux

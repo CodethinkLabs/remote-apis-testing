@@ -1,0 +1,53 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: worker-ubuntu16-04
+  namespace: buildbarn
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: worker
+      instance: ubuntu16-04
+  template:
+    metadata:
+      annotations:
+        prometheus.io/port: "80"
+        prometheus.io/scrape: "true"
+      labels:
+        app: worker
+        instance: ubuntu16-04
+    spec:
+      containers:
+      - args:
+        - -browser-url=http://bb-browser.example.com/
+        - -concurrency=4
+        - -scheduler=scheduler-ubuntu16-04:8981
+        image: remoteapistesting/bb-worker:latest
+        name: worker
+        volumeMounts:
+        - mountPath: /config
+          name: config
+        - mountPath: /worker
+          name: worker
+      - image: remoteapistesting/bb-runner-ubuntu16-04:latest
+        name: runner
+        volumeMounts:
+        - mountPath: /worker
+          name: worker
+      initContainers:
+      - name: volume-init
+        image: busybox:1.30.1
+        command:
+        - sh
+        - -c
+        - mkdir -pm 0777 /worker/build && mkdir -pm 0700 /worker/cache && chmod 0777 /worker
+        volumeMounts:
+        - mountPath: /worker
+          name: worker
+      volumes:
+      - configMap:
+          name: config-storage-clients
+        name: config
+      - emptyDir: {}
+        name: worker
