@@ -63,7 +63,7 @@ build-buildbarn-remote-execution:
   script:
     - git clone https://github.com/buildbarn/bb-remote-execution
     - |
-      for service in bb_worker bb_scheduler bb_runner_ubuntu16_04 bb_runner_debian8; do
+      for service in bb_worker bb_scheduler bb_runner_ubuntu16_04; do
           service_folder=`echo $service | cut -d _ -f -2`
           (cd bb-remote-execution && bazel build //cmd/${service_folder}:${service}_container_push)
           sed -i bb-remote-execution/bazel-bin/cmd/${service_folder}/${service}_container_push -e "s#index.docker.io/buildbarn/\(.*\):{BUILD_SCM_TIMESTAMP}-{BUILD_SCM_REVISION}#index.docker.io/remoteapistesting/\1:$CI_PIPELINE_ID#"
