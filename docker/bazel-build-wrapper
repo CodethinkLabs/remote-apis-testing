@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# First argument is the git repo to build with Bazel
+git_repo=$1
+# All the remaining arguments will be passed to `bazel build`
+bazel_args="${@:2}"
+
+echo "## bazelrc file:"
+cat bazelrc
+echo "## end of bazelrc\n"
+
+git clone $git_repo repo
+cd repo
+
+# Rename bazel_toolchains if present
+sed -i -e 's/\(bazel_toolchains\)/\1_old/' WORKSPACE
+# Append toolchain to the workspace
+cat /src/workspace >> WORKSPACE
+
+echo "## WORKSPACE file:"
+cat WORKSPACE
+echo "## end of WORKSPACE\n"
+
+# Execute bazel build
+set -x
+/root/.bazel/bin/bazel --bazelrc=/src/bazelrc build $bazel_args

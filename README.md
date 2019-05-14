@@ -12,7 +12,7 @@ Potential additional targets are:
 * [BuildStream](https://gitlab.com/BuildStream/buildstream)
 * [BuildFarm](https://github.com/uber/bazel-buildfarm)
 
-The initial aim is to test the latest version of Bazel against the latest versions of Buildbarn and BuildGrid on a continous basis, producing a matrix which could (eventually) look something like the following - over-simplified and hypothetical - example:
+The initial aim is to test the latest version of Bazel against the latest versions of Buildbarn and BuildGrid on a continuous basis, producing a matrix which could (eventually) look something like the following - over-simplified and hypothetical - example:
 
 | --- | BuildGrid | BuildFarm | Buildbarn |
 | -------- | -------- | -------- | -------- |
@@ -24,10 +24,9 @@ The initial test will be builds of [Absiel](https://abseil.io/) and [Tensorflow]
 
 As a later step, we may want to develop more granular testing of the API, running through all of the gRPC calls and assessing them against the protocol defined in the API.
 
-The repo is structured in 3 folders:
-- terraform/
-- terraform2ansible/
-- ansible/
+## Status
+
+Currently this project tests the latest Abseil against the latest container of Buildbarn.
 
 ### Terraform
 
@@ -50,7 +49,9 @@ Then execute the following to actually provision the cluster infrastructure:
 $ terraform apply
 ```
 
-To change the defaults use the -var option (see [here](https://aws.amazon.com/ec2/instance-types/) for instance specs):
+You can find variables available to edit in  `terrform/buildbarn/variables.tf`.
+
+To change these variables in the command line, use the -var option (see [here](https://aws.amazon.com/ec2/instance-types/) for instance specs):
 
 ```
 $ terraform apply -var cluster_name=foo
@@ -67,15 +68,21 @@ $ terraform destroy
 Kubernetes deployments can be found in the kubernetes folder. They are
 created with the following command:
 
-`kubectl create -f kubernetes/<deployment>/`
+```
+kubectl create -f kubernetes/<deployment>/
+```
 
 You can check on the status of your cluster with:
 
-`kubectl get all --all-namespaces`
+```
+kubectl get all --all-namespaces
+```
 
 Clients are run as a job in the cluster and can be found in
 `kubernetes/jobs/` folder.
 
 To see the logs of a job, you can use for example:
 
-`kubectl logs jobs/abseil -n buildbarn`
+```
+kubectl logs jobs/abseil -n buildbarn
+```

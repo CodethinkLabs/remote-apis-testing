@@ -10,7 +10,7 @@ spec:
     spec:
       containers:
       - name: abseil
-        image: remoteapistesting/bazel-builder-manual:latest
+        image: remoteapistesting/bazel-build:latest
         command:
          - /bin/bash
          - -c
