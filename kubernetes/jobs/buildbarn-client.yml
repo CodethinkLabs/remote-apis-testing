@@ -1,0 +1,19 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: abseil
+  namespace: buildbarn
+spec:
+  template:
+    metadata:
+      name: abseil
+    spec:
+      containers:
+      - name: abseil
+        image: remoteapistesting/bazel-builder-manual:latest
+        command:
+         - /bin/bash
+         - -c
+         - /bin/bazel-build-wrapper https://github.com/abseil/abseil-cpp --sandbox_debug --remote_executor=frontend:8980 //absl/...
+      restartPolicy: Never
+  backoffLimit: 0
