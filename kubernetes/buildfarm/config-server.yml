@@ -1,0 +1,52 @@
+apiVersion: v1
+data:
+  server.config: |
+    instances {
+      name: "ubuntu16-04"
+
+      digest_function: SHA256
+
+      memory_instance_config: {
+        list_operations_default_page_size: 1024
+        list_operations_max_page_size: 16384
+
+        tree_default_page_size: 1024
+        tree_max_page_size: 16384
+
+        operation_poll_timeout: {
+          seconds: 30
+          nanos: 0
+        }
+
+        operation_completed_delay: {
+          seconds: 10
+          nanos: 0
+        }
+
+        cas_config: {
+          memory: {
+            max_size_bytes: 1073741824 # 1024 * 1024 * 1024
+          }
+        }
+
+        action_cache_config: {
+          delegate_cas: {}
+        }
+
+        default_action_timeout: {
+          seconds: 600
+          nanos: 0
+        }
+
+        maximum_action_timeout: {
+          seconds: 3600
+          nanos: 0
+        }
+      }
+    }
+
+    port: 80
+kind: ConfigMap
+metadata:
+  name: server-config
+  namespace: buildfarm
