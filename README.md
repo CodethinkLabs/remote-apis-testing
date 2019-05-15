@@ -1,4 +1,4 @@
-## Remote Execution API test suite
+## Remote Execution API Test Suite
 
 This project provides a test suite designed to be an automated and independent 'acid test' for the [Remote Execution API](https://github.com/bazelbuild/remote-apis) clients and server implementations. You can find us on slack, feel free to come and chat: please use this [invite link](http://tiny.cc/tihy5y) to join our channel.
 
@@ -20,13 +20,13 @@ The initial aim is to test the latest version of Bazel against the latest versio
 | BuildStream  | Success | Fail | Success |
 | RECC | Fail | Success | Fail |
 
-The initial test will be builds of [Absiel](https://abseil.io/) and [Tensorflow](https://www.tensorflow.org/). This will be achieved using Gitlab CI, terraform and ansible, with cloud-backed infra. See below for details on how to set this up.
+The initial test will be builds of [Abseil](https://abseil.io/) and [Tensorflow](https://www.tensorflow.org/). This will be achieved using Gitlab CI, Terraform and Kubernetes with AWS.
 
 As a later step, we may want to develop more granular testing of the API, running through all of the gRPC calls and assessing them against the protocol defined in the API.
 
 ## Status
 
-Currently this project tests the latest Abseil against the latest container of Buildbarn.
+Currently this project tests a Bazel build of Abseil against Buildbarn.
 
 ### Terraform
 
@@ -37,7 +37,7 @@ To provision the desired cluster, go to the corresponding folder and first initi
 ```
 $ terraform init
 ```
-You need to configure your AWS credentials to be in enviroment variables as explained [here](https://www.terraform.io/docs/providers/aws/#environment-variables):
+You need to configure your AWS credentials to be in environment variables as explained [here](https://www.terraform.io/docs/providers/aws/#environment-variables):
 
 ```
 $ export AWS_ACCESS_KEY_ID="anaccesskey"
@@ -65,7 +65,7 @@ $ terraform destroy
 
 ### Kubernetes
 
-Kubernetes deployments can be found in the kubernetes folder. They are
+Kubernetes deployments can be found in the Kubernetes folder. They are
 created with the following command:
 
 ```
