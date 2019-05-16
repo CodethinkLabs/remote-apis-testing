@@ -120,7 +120,11 @@ kubernetes-buildbarn:
     - kubectl create -f kubernetes/jobs/buildbarn-client.yml
     - kubectl -n buildbarn describe jobs/abseil
     - kubectl -n buildbarn wait --for=condition=complete --timeout=600s job/abseil
+    - kubectl get all --all-namespaces
   after_script:
+    - ls
+    - ls terraform/buildbarn/
+    - export KUBECONFIG=$PWD/terraform/buildbarn/kubeconfig_k8-cluster-$CI_PIPELINE_ID
     - kubectl get all --all-namespaces
     - kubectl -n buildbarn logs jobs/abseil
 
