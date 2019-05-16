@@ -138,12 +138,12 @@ kubernetes-buildbarn:
     # TODO: See issue #14
     - sleep 30
     - kubectl create -f kubernetes/jobs/buildbarn-client.yml
-    - kubectl -n buildbarn describe jobs/abseil
-    - kubectl -n buildbarn wait --for=condition=complete --timeout=600s job/abseil
+    - kubectl -n buildbarn describe jobs/tensorflow
+    - kubectl -n buildbarn wait --for=condition=complete --timeout=600s jobs/tensorflow
   after_script:
     - export KUBECONFIG=$PWD/terraform/buildbarn/kubeconfig_k8-cluster-$CI_PIPELINE_ID
     - kubectl get all --all-namespaces
-    - kubectl -n buildbarn logs jobs/abseil
+    - kubectl -n buildbarn logs jobs/tensorflow
 
 cleanup-terraform-job:
   stage: cleanup
