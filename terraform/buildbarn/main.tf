@@ -2,7 +2,7 @@
 
 # Configure aws provider
 provider "aws" {
-  region = "eu-west-1"
+  region = "eu-central-1"
 }
 
 ##################################################################
