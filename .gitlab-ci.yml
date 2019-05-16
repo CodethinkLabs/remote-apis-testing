@@ -120,7 +120,7 @@ kubernetes-buildbarn:
     - sleep 30
     - kubectl create -f kubernetes/jobs/buildbarn-client.yml
     - kubectl -n buildbarn describe jobs/tensorflow
-    - kubectl -n buildbarn wait --for=condition=complete --timeout=600s jobs/tensorflow
+    - kubectl -n buildbarn wait --for=condition=complete --timeout=10800s jobs/tensorflow
   after_script:
     - export KUBECONFIG=$PWD/terraform/buildbarn/kubeconfig_k8-cluster-$CI_PIPELINE_ID
     - kubectl get all --all-namespaces
