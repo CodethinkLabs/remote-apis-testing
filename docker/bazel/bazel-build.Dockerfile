@@ -8,6 +8,8 @@ RUN chmod +x bazel-$VERSION-installer-linux-x86_64.sh
 RUN ./bazel-$VERSION-installer-linux-x86_64.sh --user
 
 RUN apt install -yq git
+RUN apt install -yq python-pip
+RUN pip install numpy
 
 WORKDIR /src
 

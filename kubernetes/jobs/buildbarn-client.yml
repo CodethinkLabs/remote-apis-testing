@@ -1,19 +1,19 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: abseil
+  name: tensorflow
   namespace: buildbarn
 spec:
   template:
     metadata:
-      name: abseil
+      name: tensorflow
     spec:
       containers:
-      - name: abseil
+      - name: tensorflow
         image: remoteapistesting/bazel-build:latest
         command:
          - /bin/bash
          - -c
-         - /bin/bazel-build-wrapper https://github.com/abseil/abseil-cpp --sandbox_debug --remote_executor=frontend:8980 //absl/...
+         - /bin/bazel-build-wrapper https://github.com/tensorflow/tensorflow --sandbox_debug --remote_executor=frontend:8980 //tensorflow/core/...
       restartPolicy: Never
   backoffLimit: 0
