@@ -12,7 +12,7 @@ variable "node_min_size" {
 
 variable "node_type" {
   type    = "string"
-  default = "c5.xlarge"
+  default = "c5.18xlarge"
 }
 
 variable "cluster_id" {
