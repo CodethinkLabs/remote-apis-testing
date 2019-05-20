@@ -22,5 +22,5 @@ build --host_cpu=k8
 
 # From https://github.com/buildbarn/bb-deployments README.md
 
-build --jobs=16
+build --jobs=68
 build --remote_instance_name=ubuntu16-04
