@@ -14,6 +14,7 @@ spec:
         command:
          - /bin/bash
          - -c
-         - /bin/bazel-build-wrapper https://github.com/abseil/abseil-cpp --remote_executor=buildfarm-server //...:all
+         - /bin/bazel-build-wrapper https://github.com/abseil/abseil-cpp --sandbox_debug --remote_executor=buildfarm-server //...:all
+        #- apt install -y netcat && nc -v frontend 8980
       restartPolicy: Never
   backoffLimit: 0

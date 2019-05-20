@@ -10,14 +10,12 @@ data:
     }
 
     content_addressable_storage: {
-      target: "buildfarm-server"
-
+      target: "storage:8980"
       instance_name: "ubuntu16-04"
     }
 
     action_cache: {
-      target: "buildfarm-server"
-
+      target: "storage:8980"
       instance_name: "ubuntu16-04"
     }
 

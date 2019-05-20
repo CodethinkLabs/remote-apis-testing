@@ -24,8 +24,12 @@ data:
         }
 
         cas_config: {
-          memory: {
-            max_size_bytes: 1073741824 # 1024 * 1024 * 1024
+          #memory: {
+          # max_size_bytes: 1073741824 # 1024 * 1024 * 1024
+          #}
+          grpc: {
+            instance_name: "ubuntu16-04"
+            target: "storage:8980"
           }
         }
 
