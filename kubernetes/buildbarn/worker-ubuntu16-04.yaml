@@ -4,7 +4,7 @@ metadata:
   name: worker-ubuntu16-04
   namespace: buildbarn
 spec:
-  replicas: 3
+  replicas: 68
   selector:
     matchLabels:
       app: worker
