@@ -16,7 +16,9 @@ spec:
         instance: ubuntu16-04
     spec:
       containers:
-      - image: remoteapistesting/bb-scheduler:latest
+      - args:
+        - -jobs-pending-max=1000
+        image: remoteapistesting/bb-scheduler:latest
         name: scheduler
         ports:
         - containerPort: 8981
