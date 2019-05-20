@@ -44,8 +44,9 @@ build-docker-bazel-build-wrapper:
     - docker:dind
   script:
     - docker login -u $DOCKER_USER -p $DOCKER_PASS
-    - (cd docker/bazel && docker build -t remoteapistesting/bazel-build:$CI_PIPELINE_ID -f bazel-build.Dockerfile .)
+    - (cd docker/bazel && docker build -t remoteapistesting/bazel-build:$CI_PIPELINE_ID -t remoteapistesting/bazel-build:latest -f bazel-build.Dockerfile .)
     - docker push remoteapistesting/bazel-build:$CI_PIPELINE_ID
+    - docker push remoteapistesting/bazel-build:latest
 
 build-buildbarn-remote-execution:
   stage: build-images-and-terraform
@@ -56,9 +57,15 @@ build-buildbarn-remote-execution:
     - |
       for service in bb_worker bb_scheduler bb_runner_ubuntu16_04; do
           service_folder=`echo $service | cut -d _ -f -2`
+          output_dir="bb-remote-execution/bazel-bin/cmd/${service_folder}"
+
           (cd bb-remote-execution && bazel build //cmd/${service_folder}:${service}_container_push)
-          sed -i bb-remote-execution/bazel-bin/cmd/${service_folder}/${service}_container_push -e "s#index.docker.io/buildbarn/\(.*\):{BUILD_SCM_TIMESTAMP}-{BUILD_SCM_REVISION}#index.docker.io/remoteapistesting/\1:$CI_PIPELINE_ID#"
-          bash bb-remote-execution/bazel-bin/cmd/${service_folder}/${service}_container_push
+          sed -i $output_dir/${service}_container_push -e "s#index.docker.io/buildbarn/\(.*\):{BUILD_SCM_TIMESTAMP}-{BUILD_SCM_REVISION}#index.docker.io/remoteapistesting/\1:latest#"
+          bash $output_dir/${service}_container_push
+
+          (cd bb-remote-execution && bazel build //cmd/${service_folder}:${service}_container_push)
+          sed -i $output_dir/${service}_container_push -e "s#index.docker.io/buildbarn/\(.*\):{BUILD_SCM_TIMESTAMP}-{BUILD_SCM_REVISION}#index.docker.io/remoteapistesting/\1:$CI_PIPELINE_ID#"
+          bash $output_dir/${service}_container_push
       done
 
 .build-buildbarn-template: &build-buildbarn-template
@@ -67,9 +74,16 @@ build-buildbarn-remote-execution:
   before_script: *before_bazel_builds
   script:
     - git clone $REPO $SERVICE
+    - output_dir="${SERVICE}/bazel-bin/cmd/${SERVICE}"
+
     - (cd ${SERVICE} && bazel build //cmd/${SERVICE}:${SERVICE}_container_push)
-    - sed -i ${SERVICE}/bazel-bin/cmd/${SERVICE}/${SERVICE}_container_push -e "s#index.docker.io/buildbarn/\(.*\):{BUILD_SCM_TIMESTAMP}-{BUILD_SCM_REVISION}#index.docker.io/remoteapistesting/\1:$CI_PIPELINE_ID#"
-    - bash ${SERVICE}/bazel-bin/cmd/${SERVICE}/${SERVICE}_container_push
+    - sed -i $output_dir/${SERVICE}_container_push -e "s#index.docker.io/buildbarn/\(.*\):{BUILD_SCM_TIMESTAMP}-{BUILD_SCM_REVISION}#index.docker.io/remoteapistesting/\1:latest#"
+    - bash $output_dir/${SERVICE}_container_push
+
+    - (cd ${SERVICE} && bazel build //cmd/${SERVICE}:${SERVICE}_container_push)
+    - sed -i $output_dir/${SERVICE}_container_push -e "s#index.docker.io/buildbarn/\(.*\):{BUILD_SCM_TIMESTAMP}-{BUILD_SCM_REVISION}#index.docker.io/remoteapistesting/\1:$CI_PIPELINE_ID#"
+    - bash $output_dir/${SERVICE}_container_push
+
 
 build-buildbarn-storage:
   variables:
@@ -121,6 +135,7 @@ kubernetes-buildbarn:
     - kubectl -n buildbarn describe jobs/abseil
     - kubectl -n buildbarn wait --for=condition=complete --timeout=600s job/abseil
   after_script:
+    - export KUBECONFIG=$PWD/terraform/buildbarn/kubeconfig_k8-cluster-$CI_PIPELINE_ID
     - kubectl get all --all-namespaces
     - kubectl -n buildbarn logs jobs/abseil
 
