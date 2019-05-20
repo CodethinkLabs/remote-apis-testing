@@ -3,7 +3,7 @@ variable "ebs_optimized" {
 }
 
 variable "node_max_size" {
-  default = 2
+  default = 1
 }
 
 variable "node_min_size" {
