@@ -1,0 +1,17 @@
+apiVersion: v1
+data:
+  blobstore.conf: |
+    content_addressable_storage {
+      grpc {
+        endpoint: "storage:8980"
+      }
+    }
+    action_cache {
+      grpc {
+       endpoint: "storage:8980"
+      }
+    }
+kind: ConfigMap
+metadata:
+  name: config-storage-clients
+  namespace: buildfarm

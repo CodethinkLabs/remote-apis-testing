@@ -10,12 +10,12 @@ data:
     }
 
     content_addressable_storage: {
-      target: "storage:8980"
+      target: "frontend:8980"
       instance_name: "ubuntu16-04"
     }
 
     action_cache: {
-      target: "storage:8980"
+      target: "frontend:8980"
       instance_name: "ubuntu16-04"
     }
 
