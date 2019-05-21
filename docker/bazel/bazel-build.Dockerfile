@@ -1,11 +1,13 @@
 FROM ubuntu:18.04
 
-env VERSION=0.24.1
-RUN apt update && apt install -yq pkg-config zip g++ zlib1g-dev unzip python # all was installed in my case
-RUN apt install -yq curl
-RUN curl -L "https://github.com/bazelbuild/bazel/releases/download/$VERSION/bazel-$VERSION-installer-linux-x86_64.sh" -o bazel-$VERSION-installer-linux-x86_64.sh
-RUN chmod +x bazel-$VERSION-installer-linux-x86_64.sh
-RUN ./bazel-$VERSION-installer-linux-x86_64.sh --user
+
+RUN apt update && apt install -yq git openjdk-8-jdk \
+    curl gnupg # For curl | apt-key to work
+
+RUN echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt testing jdk1.8" | tee /etc/apt/sources.list.d/bazel.list
+RUN curl https://bazel.build/bazel-release.pub.gpg | apt-key add -
+RUN apt update && apt -yq install bazel
+
 
 RUN apt install -yq git
 

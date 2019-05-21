@@ -23,4 +23,4 @@ echo "## end of WORKSPACE\n"
 
 # Execute bazel build
 set -x
-/root/.bazel/bin/bazel --bazelrc=/src/bazelrc build $bazel_args
+bazel --bazelrc=/src/bazelrc build $bazel_args
