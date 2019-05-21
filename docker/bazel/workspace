@@ -5,3 +5,9 @@ git_repository(
     remote = "https://github.com/bazelbuild/bazel-toolchains",
     branch = "master",
 )
+
+git_repository(
+    name = "bazel_tools",
+    remote = "https://github.com/bazelbuild/bazel.git",
+    branch = "master",
+)
