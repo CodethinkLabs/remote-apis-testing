@@ -21,7 +21,7 @@ spec:
       containers:
       - args:
         - -browser-url=http://bb-browser.example.com/
-        - -concurrency=4
+        - -concurrency=1
         - -scheduler=scheduler-ubuntu16-04:8981
         image: remoteapistesting/bb-worker:latest
         name: worker
