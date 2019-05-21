@@ -13,7 +13,7 @@ git clone $git_repo repo
 cd repo
 
 # Rename bazel_toolchains if present
-sed -i -e 's/\(bazel_toolchains\)/\1_old/' WORKSPACE
+sed -i -e 's/"bazel_toolchains"/"bazel_toolchains_old"/' WORKSPACE
 # Append toolchain to the workspace
 cat /src/workspace >> WORKSPACE
 
