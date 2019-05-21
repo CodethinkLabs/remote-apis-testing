@@ -4,7 +4,7 @@ metadata:
   name: worker-ubuntu16-04
   namespace: buildbarn
 spec:
-  replicas: 68
+  replicas: 1
   selector:
     matchLabels:
       app: worker
@@ -21,7 +21,7 @@ spec:
       containers:
       - args:
         - -browser-url=http://bb-browser.example.com/
-        - -concurrency=1
+        - -concurrency=68
         - -scheduler=scheduler-ubuntu16-04:8981
         image: remoteapistesting/bb-worker:latest
         name: worker
