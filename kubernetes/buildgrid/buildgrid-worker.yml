@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker
+  namespace: buildgrid
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: worker
+  template:
+    metadata:
+      labels:
+        app: worker
+    spec:
+      containers:
+      - args:
+        #- /usr/local/bin/bgd
+        #- bot 
+        #- --remote=http://buildgrid:50051 
+        #- --parent=main 
+        #- host-tools
+        - apt update && apt install netcat && nc -v buildgrid 50051
+
+        image: registry.gitlab.com/buildgrid/buildgrid.hub.docker.com/buildgrid:nightly
+        name: worker
+        ports:
+        - containerPort: 50051
+          protocol: TCP
+    
