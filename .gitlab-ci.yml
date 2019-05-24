@@ -46,7 +46,7 @@ build-docker-bazel-build-wrapper:
     - docker login -u $DOCKER_USER -p $DOCKER_PASS
     - (cd docker/bazel && docker build -t remoteapistesting/bazel-build:$CI_PIPELINE_ID -t remoteapistesting/bazel-build:latest -f bazel-build.Dockerfile .)
     - docker push remoteapistesting/bazel-build:$CI_PIPELINE_ID
-    - docker push remoteapistesting/bazel-build:latest
+    - if [ "$CI_COMMIT_REF_NAME" == "master" ]; then docker push remoteapistesting/bazel-build:latest; fi
 
 build-buildbarn-remote-execution:
   stage: build-images-and-terraform
@@ -59,9 +59,11 @@ build-buildbarn-remote-execution:
           service_folder=`echo $service | cut -d _ -f -2`
           output_dir="bb-remote-execution/bazel-bin/cmd/${service_folder}"
 
-          (cd bb-remote-execution && bazel build //cmd/${service_folder}:${service}_container_push)
-          sed -i $output_dir/${service}_container_push -e "s#index.docker.io/buildbarn/\(.*\):{BUILD_SCM_TIMESTAMP}-{BUILD_SCM_REVISION}#index.docker.io/remoteapistesting/\1:latest#"
-          bash $output_dir/${service}_container_push
+          if [ "$CI_COMMIT_REF_NAME" == "master" ]; then
+              (cd bb-remote-execution && bazel build //cmd/${service_folder}:${service}_container_push)
+              sed -i $output_dir/${service}_container_push -e "s#index.docker.io/buildbarn/\(.*\):{BUILD_SCM_TIMESTAMP}-{BUILD_SCM_REVISION}#index.docker.io/remoteapistesting/\1:latest#"
+              bash $output_dir/${service}_container_push
+          fi
 
           (cd bb-remote-execution && bazel build //cmd/${service_folder}:${service}_container_push)
           sed -i $output_dir/${service}_container_push -e "s#index.docker.io/buildbarn/\(.*\):{BUILD_SCM_TIMESTAMP}-{BUILD_SCM_REVISION}#index.docker.io/remoteapistesting/\1:$CI_PIPELINE_ID#"
@@ -76,9 +78,12 @@ build-buildbarn-remote-execution:
     - git clone $REPO $SERVICE
     - output_dir="${SERVICE}/bazel-bin/cmd/${SERVICE}"
 
-    - (cd ${SERVICE} && bazel build //cmd/${SERVICE}:${SERVICE}_container_push)
-    - sed -i $output_dir/${SERVICE}_container_push -e "s#index.docker.io/buildbarn/\(.*\):{BUILD_SCM_TIMESTAMP}-{BUILD_SCM_REVISION}#index.docker.io/remoteapistesting/\1:latest#"
-    - bash $output_dir/${SERVICE}_container_push
+    - |
+      if [ "$CI_COMMIT_REF_NAME" == "master" ]; then
+          (cd ${SERVICE} && bazel build //cmd/${SERVICE}:${SERVICE}_container_push)
+          sed -i $output_dir/${SERVICE}_container_push -e "s#index.docker.io/buildbarn/\(.*\):{BUILD_SCM_TIMESTAMP}-{BUILD_SCM_REVISION}#index.docker.io/remoteapistesting/\1:latest#"
+          bash $output_dir/${SERVICE}_container_push
+      fi
 
     - (cd ${SERVICE} && bazel build //cmd/${SERVICE}:${SERVICE}_container_push)
     - sed -i $output_dir/${SERVICE}_container_push -e "s#index.docker.io/buildbarn/\(.*\):{BUILD_SCM_TIMESTAMP}-{BUILD_SCM_REVISION}#index.docker.io/remoteapistesting/\1:$CI_PIPELINE_ID#"
