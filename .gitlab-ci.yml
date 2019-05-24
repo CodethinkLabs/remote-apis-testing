@@ -52,6 +52,7 @@ build-buildbarn-remote-execution:
   before_script: *before_bazel_builds
   script:
     - git clone https://github.com/buildbarn/bb-remote-execution
+    - (cd bb-remote-execution; git apply ../patches/bb-remote-execution/*patch)
     - |
       for service in bb_worker bb_scheduler bb_runner_ubuntu16_04; do
           service_folder=`echo $service | cut -d _ -f -2`
