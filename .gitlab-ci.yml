@@ -38,8 +38,6 @@ stages:
 build-docker-bazel-build-wrapper:
   stage: build-images-and-terraform
   image: docker:stable
-  tags:
-    - privileged
   services:
     - docker:dind
   script:
