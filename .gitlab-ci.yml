@@ -36,6 +36,10 @@ build-buildbarn-remote-execution:
   script:
     - git clone https://github.com/buildbarn/bb-remote-execution
     - (cd bb-remote-execution; git apply ../patches/bb-remote-execution/*patch)
+    - cat patches/httplib2/workspace >> bb-remote-execution/WORKSPACE
+    - cp patches/httplib2/cacert.patch bb-remote-execution/
+    - cat bb-remote-execution/WORKSPACE
+    - ls bb-remote-execution/
     - |
       for service in bb_worker bb_scheduler bb_runner_ubuntu16_04; do
           service_folder=`echo $service | cut -d _ -f -2`
