@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: storage
+  name: buildgrid-stack
   namespace: buildgrid
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: buildgrid
-  serviceName: buildgrid
+      app: buildgrid-stack
+  serviceName: buildgrid-stack
   template:
     metadata:
       labels:
-        app: buildgrid
+        app: buildgrid-stack
     spec:
       containers:
       - args:
@@ -21,7 +21,7 @@ spec:
         - start
         - /config/artifacts.conf
         image: registry.gitlab.com/buildgrid/buildgrid.hub.docker.com/buildgrid:nightly
-        name: buildgrid
+        name: buildgrid-stack
         ports:
         - containerPort: 50051
           protocol: TCP
@@ -51,7 +51,6 @@ data:
       - !channel
         port: 50051
         insecure-mode: true
-
     instances:
       - name: main
 
@@ -80,3 +79,19 @@ kind: ConfigMap
 metadata:
   name: config-storage
   namespace: buildgrid
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: buildgrid-stack
+  namespace: buildgrid
+spec:
+  ports:
+  - port: 50051
+    protocol: TCP
+  selector:
+    app: buildgrid-stack
+  type: LoadBalancer
+
+
+
