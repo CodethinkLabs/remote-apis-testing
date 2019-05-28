@@ -48,7 +48,7 @@ build-buildbarn-remote-execution:
           fi
 
           (cd bb-remote-execution && bazel build //cmd/${service_folder}:${service}_container_push)
-          sed -i $output_dir/${service}_container_push -e "s#index.docker.io/buildbarn/\(.*\):{BUILD_SCM_TIMESTAMP}-{BUILD_SCM_REVISION}#index.docker.io/$DOCKER_ACCOUNT/\1:$CI_PIPELINE_ID#"
+          sed -i $output_dir/${service}_container_push -e "s#index.docker.io/buildbarn/\(.*\):{BUILD_SCM_TIMESTAMP}-{BUILD_SCM_REVISION}#$CI_REGISTRY/$CI_PROJECT_PATH/\1:$CI_PIPELINE_ID#"
           bash $output_dir/${service}_container_push
       done
 
