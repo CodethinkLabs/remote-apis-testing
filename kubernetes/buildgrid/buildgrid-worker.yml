@@ -14,16 +14,9 @@ spec:
         app: worker
     spec:
       containers:
-      - args:
-        #- /usr/local/bin/bgd
-        #- bot 
-        #- --remote=http://buildgrid:50051 
-        #- --parent=main 
-        #- host-tools
-        - apt update && apt install netcat && nc -v buildgrid 50051
-
+      - name: worker
         image: registry.gitlab.com/buildgrid/buildgrid.hub.docker.com/buildgrid:nightly
-        name: worker
+        command: ["bgd","bot","--remote=http://buildgrid-stack:50051", "--parent=main", "host-tools"]
         ports:
         - containerPort: 50051
           protocol: TCP
