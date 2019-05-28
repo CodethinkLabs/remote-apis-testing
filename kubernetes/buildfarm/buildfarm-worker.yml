@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - args:
-        - /etc/buildfarm/worker.config
+        - --jvm_flag=-Djava.util.logging.config.file=examples/debug.logging.properties /etc/buildfarm/worker.config
         image: werkt/buildfarm-worker:latest
         name: worker
         volumeMounts:

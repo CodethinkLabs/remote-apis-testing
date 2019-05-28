@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - args:
-        - /etc/buildfarm/server.config
+        - --jvm_flag=-Djava.util.logging.config.file=examples/debug.logging.properties /etc/buildfarm/server.config
         image: werkt/buildfarm-server:latest
         name: server
         ports:
