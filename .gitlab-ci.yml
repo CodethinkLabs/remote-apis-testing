@@ -144,6 +144,7 @@ kubernetes-buildbarn:
     - export KUBECONFIG=$PWD/terraform/kubeconfig_k8-cluster-$CI_PIPELINE_ID
     - kubectl get all --all-namespaces
     - kubectl -n buildbarn logs jobs/abseil
+    - kubectl delete namespace buildbarn
 
 cleanup-terraform-job:
   stage: cleanup
