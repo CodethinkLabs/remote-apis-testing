@@ -139,11 +139,11 @@ kubernetes-buildbarn:
     - sleep 30
     - kubectl create -f kubernetes/jobs/buildbarn-client.yml
     - kubectl -n buildbarn describe jobs/abseil
-    - kubectl -n buildbarn wait --for=condition=complete --timeout=600s job/abseil
+    - until kubectl get pods --field-selector=status.phase!=Running --all-namespaces 2>&1 | grep -q "No resources found."; do kubectl -n buildbarn get pods; sleep 10; done
+    - kubectl -n buildbarn logs -f jobs/abseil
   after_script:
     - export KUBECONFIG=$PWD/terraform/buildbarn/kubeconfig_k8-cluster-$CI_PIPELINE_ID
     - kubectl get all --all-namespaces
-    - kubectl -n buildbarn logs jobs/abseil
 
 cleanup-terraform-job:
   stage: cleanup
