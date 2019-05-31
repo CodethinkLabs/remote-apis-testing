@@ -10,6 +10,8 @@ RUN apt update && apt -yq install bazel
 
 
 RUN apt install -yq git
+RUN apt install -yq python-pip
+RUN pip install numpy
 
 WORKDIR /src
 
