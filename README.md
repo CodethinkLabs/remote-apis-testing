@@ -12,13 +12,7 @@ Potential additional targets are:
 * [BuildStream](https://gitlab.com/BuildStream/buildstream)
 * [BuildFarm](https://github.com/uber/bazel-buildfarm)
 
-The initial aim is to test the latest version of Bazel against the latest versions of Buildbarn and BuildGrid on a continuous basis, producing a matrix which could (eventually) look something like the following - over-simplified and hypothetical - example:
-
-| --- | BuildGrid | BuildFarm | Buildbarn |
-| -------- | -------- | -------- | -------- |
-| Bazel  | Success | Success | Success |
-| BuildStream  | Success | Fail | Success |
-| RECC | Fail | Success | Fail |
+The initial aim is to test the latest version of Bazel against the latest versions of Buildbarn and BuildGrid on a continuous basis, producing a compatibility matrix
 
 The initial test will be builds of [Abseil](https://abseil.io/) and [Tensorflow](https://www.tensorflow.org/). This will be achieved using Gitlab CI, Terraform and Kubernetes with AWS.
 
@@ -27,6 +21,12 @@ As a later step, we may want to develop more granular testing of the API, runnin
 ## Status
 
 Currently this project tests a Bazel build of Abseil against Buildbarn.
+
+| --- | BuildGrid | BuildFarm | Buildbarn |
+| -------- | -------- | -------- | -------- |
+| Bazel  | TBA | TBA | Success |
+| BuildStream  | TBA | TBA | TBA |
+| RECC | TBA | TBA | TBA |
 
 ### Terraform
 
