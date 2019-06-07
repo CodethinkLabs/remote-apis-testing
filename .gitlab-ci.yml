@@ -102,12 +102,12 @@ terraform-infra:
     - *before_terraform
     - *before_kubernetes
   script:
-    - cd terraform/buildbarn/
+    - cd terraform
     - terraform init
     - terraform apply -var cluster_id=$CI_PIPELINE_ID -auto-approve
   artifacts:
     paths:
-      - terraform/buildbarn/
+      - terraform/
     untracked: true
     expire_in: 1 week
 
@@ -119,7 +119,7 @@ kubernetes-buildbarn:
   before_script:
     - *before_kubernetes
   script:
-    - export KUBECONFIG=$PWD/terraform/buildbarn/kubeconfig_k8-cluster-$CI_PIPELINE_ID
+    - export KUBECONFIG=$PWD/terraform/kubeconfig_k8-cluster-$CI_PIPELINE_ID
     - |
       for service in frontend scheduler-ubuntu16-04 storage worker-ubuntu16-04; do
         sed -i "s|:latest|:$CI_PIPELINE_ID|g" kubernetes/buildbarn/${service}.yaml
@@ -141,7 +141,7 @@ kubernetes-buildbarn:
     - kubectl -n buildbarn describe jobs/abseil
     - kubectl -n buildbarn wait --for=condition=complete --timeout=600s job/abseil
   after_script:
-    - export KUBECONFIG=$PWD/terraform/buildbarn/kubeconfig_k8-cluster-$CI_PIPELINE_ID
+    - export KUBECONFIG=$PWD/terraform/kubeconfig_k8-cluster-$CI_PIPELINE_ID
     - kubectl get all --all-namespaces
     - kubectl -n buildbarn logs jobs/abseil
 
@@ -154,7 +154,7 @@ cleanup-terraform-job:
     - *before_terraform
     - *before_kubernetes
   script:
-    - cd terraform/buildbarn/
+    - cd terraform
     - terraform init
     - terraform destroy -var cluster_id=$CI_PIPELINE_ID -auto-approve
   variables:

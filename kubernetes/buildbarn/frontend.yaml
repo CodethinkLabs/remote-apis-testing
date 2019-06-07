@@ -43,4 +43,4 @@ spec:
     protocol: TCP
   selector:
     app: frontend
-  type: LoadBalancer
+  type: ClusterIP
