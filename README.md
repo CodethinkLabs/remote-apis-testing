@@ -5,6 +5,7 @@ This project provides a test suite designed to be an automated and independent '
 Initial targets include:
 * [Bazel](https://bazel.build/)
 * [Buildbarn](https://github.com/buildbarn)
+* [Buildfarm](https://github.com/bazelbuild/bazel-buildfarm)
 * [Buildgrid](https://gitlab.com/BuildGrid/buildgrid)
 
 Potential additional targets are:
@@ -12,7 +13,7 @@ Potential additional targets are:
 * [BuildStream](https://gitlab.com/BuildStream/buildstream)
 * [BuildFarm](https://github.com/uber/bazel-buildfarm)
 
-The initial aim is to test the latest version of Bazel against the latest versions of Buildbarn and BuildGrid on a continuous basis, producing a compatibility matrix
+The initial aim is to test the latest version of Bazel against the latest versions of Buildbarn, Buildfarm and BuildGrid on a continuous basis, producing a compatibility matrix
 
 The initial test will be builds of [Abseil](https://abseil.io/) and [Tensorflow](https://www.tensorflow.org/). This will be achieved using Gitlab CI, Terraform and Kubernetes with AWS.
 
@@ -24,13 +25,13 @@ Currently this project tests a Bazel build of Abseil against Buildbarn.
 
 | --- | BuildGrid | BuildFarm | Buildbarn |
 | -------- | -------- | -------- | -------- |
-| Bazel  | TBA | TBA | Success |
+| Bazel  | Success (Host-tools) | Success | Success |
 | BuildStream  | TBA | TBA | TBA |
 | RECC | TBA | TBA | TBA |
 
 ### Terraform
 
-Terraform deployments can be found in the `terraform/<deployment>` folder.
+Terraform deployments can be found in the `terraform/` folder.
 
 To provision the desired cluster, go to the corresponding folder and first initialise terraform with:
 
@@ -49,7 +50,7 @@ Then execute the following to actually provision the cluster infrastructure:
 $ terraform apply
 ```
 
-You can find variables available to edit in  `terrform/buildbarn/variables.tf`.
+You can find variables available to edit in  `terrform/variables.tf`.
 
 To change these variables in the command line, use the -var option (see [here](https://aws.amazon.com/ec2/instance-types/) for instance specs):
 

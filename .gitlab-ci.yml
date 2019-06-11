@@ -46,6 +46,17 @@ build-docker-bazel-build-wrapper:
     - docker push $DOCKER_ACCOUNT/bazel-build:$CI_PIPELINE_ID
     - if [ "$CI_COMMIT_REF_NAME" == "master" ]; then docker push $DOCKER_ACCOUNT/bazel-build:latest; fi
 
+build-docker-bazel-buildgrid-wrapper:
+  stage: build-images-and-terraform
+  image: docker:stable
+  services:
+    - docker:dind
+  script:
+    - docker login -u $DOCKER_USER -p $DOCKER_PASS
+    - (cd docker/bazel && docker build -t $DOCKER_ACCOUNT/bazel-build-buildgrid:$CI_PIPELINE_ID -t $DOCKER_ACCOUNT/bazel-build-buildgrid:latest -f bazel-build-buildgrid.Dockerfile .)
+    - docker push $DOCKER_ACCOUNT/bazel-build-buildgrid:$CI_PIPELINE_ID
+    - if [ "$CI_COMMIT_REF_NAME" == "master" ]; then docker push $DOCKER_ACCOUNT/bazel-build-buildgrid:latest; fi
+
 build-buildbarn-remote-execution:
   stage: build-images-and-terraform
   image: $BASE_IMAGE
@@ -169,6 +180,32 @@ kubernetes-buildfarm:
     - kubectl get all --all-namespaces
     - kubectl -n buildfarm logs jobs/abseil
     - kubectl delete namespace buildfarm
+
+kubernetes-buildgrid:
+  stage: bazel-kubernetes
+  image: $BASE_IMAGE
+  dependencies:
+    - terraform-infra
+  before_script:
+    - *before_kubernetes
+  script:
+    - export KUBECONFIG=$PWD/terraform/kubeconfig_k8-cluster-$CI_PIPELINE_ID
+    - sed -i "s|:latest|:$CI_PIPELINE_ID|g" kubernetes/jobs/buildgrid-client.yml
+    - kubectl create -f kubernetes/buildgrid/
+    - kubectl -n buildgrid rollout status statefulset buildgrid-stack
+    - kubectl -n buildgrid rollout status deployment.apps/worker
+    - until kubectl get pods --field-selector=status.phase!=Running --all-namespaces 2>&1 | grep -q "No resources found."; do kubectl -n buildgrid get pods; sleep 10; done
+    - kubectl get all --all-namespaces
+    # TODO: See issue #14
+    - sleep 30
+    - kubectl create -f kubernetes/jobs/buildgrid-client.yml
+    - kubectl -n buildgrid describe jobs/abseil
+    - kubectl -n buildgrid wait --for=condition=complete --timeout=600s job/abseil
+  after_script:
+    - export KUBECONFIG=$PWD/terraform/kubeconfig_k8-cluster-$CI_PIPELINE_ID
+    - kubectl get all --all-namespaces
+    - kubectl -n buildgrid logs jobs/abseil
+    - kubectl delete namespace buildgrid
 
 cleanup-terraform-job:
   stage: cleanup
