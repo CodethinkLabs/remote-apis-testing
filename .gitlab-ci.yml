@@ -6,7 +6,7 @@ variables:
 
 stages:
   - build-images-and-terraform
-  - kubernetes
+  - bazel-kubernetes
   - cleanup
 
 .before-bazel-builds: &before_bazel_builds
@@ -112,21 +112,20 @@ terraform-infra:
     expire_in: 1 week
 
 kubernetes-buildbarn:
-  stage: kubernetes
+  stage: bazel-kubernetes
   image: $BASE_IMAGE
   dependencies:
     - terraform-infra
   before_script:
     - *before_kubernetes
-  script:
-    - export KUBECONFIG=$PWD/terraform/kubeconfig_k8-cluster-$CI_PIPELINE_ID
     - |
       for service in frontend scheduler-ubuntu16-04 storage worker-ubuntu16-04; do
         sed -i "s|:latest|:$CI_PIPELINE_ID|g" kubernetes/buildbarn/${service}.yaml
         sed -i "s|remoteapistesting|$DOCKER_ACCOUNT|g" kubernetes/buildbarn/${service}.yaml
       done
     - sed -i "s|:latest|:$CI_PIPELINE_ID|g" kubernetes/jobs/buildbarn-client.yml
-    - sed -i "s|remoteapistesting|$DOCKER_ACCOUNT|g" kubernetes/jobs/buildbarn-client.yml
+  script:
+    - export KUBECONFIG=$PWD/terraform/kubeconfig_k8-cluster-$CI_PIPELINE_ID
     - kubectl create -f kubernetes/buildbarn/
     - kubectl -n buildbarn rollout status deployment.apps/scheduler-ubuntu16-04
     - kubectl -n buildbarn rollout status deployment.apps/frontend
@@ -134,7 +133,6 @@ kubernetes-buildbarn:
     - kubectl -n buildbarn rollout status statefulset.apps/storage
     - until kubectl get pods --field-selector=status.phase!=Running --all-namespaces 2>&1 | grep -q "No resources found."; do kubectl -n buildbarn get pods; sleep 10; done
     - kubectl get all --all-namespaces
-    - sed -i "s|:latest|:0.24.1|g" kubernetes/jobs/buildbarn-client.yml
     # TODO: See issue #14
     - sleep 30
     - kubectl create -f kubernetes/jobs/buildbarn-client.yml
@@ -144,6 +142,33 @@ kubernetes-buildbarn:
     - export KUBECONFIG=$PWD/terraform/kubeconfig_k8-cluster-$CI_PIPELINE_ID
     - kubectl get all --all-namespaces
     - kubectl -n buildbarn logs jobs/abseil
+    - kubectl delete namespace buildbarn
+
+kubernetes-buildfarm:
+  stage: bazel-kubernetes
+  image: $BASE_IMAGE
+  dependencies:
+    - terraform-infra
+  before_script:
+    - *before_kubernetes
+    - sed -i "s|:latest|:$CI_PIPELINE_ID|g" kubernetes/jobs/buildfarm-client.yml
+  script:
+    - export KUBECONFIG=$PWD/terraform/kubeconfig_k8-cluster-$CI_PIPELINE_ID
+    - kubectl create -f kubernetes/buildfarm
+    - kubectl -n buildfarm rollout status deployment.apps/buildfarm-server
+    - kubectl -n buildfarm rollout status deployment.apps/buildfarm-worker
+    - until kubectl get pods --field-selector=status.phase!=Running --all-namespaces 2>&1 | grep -q "No resources found."; do kubectl -n buildfarm get pods; sleep 10; done
+    - kubectl get all --all-namespaces
+    # TODO: See issue #14
+    - sleep 30
+    - kubectl create -f kubernetes/jobs/buildfarm-client.yml
+    - kubectl -n buildfarm describe jobs/abseil
+    - kubectl -n buildfarm wait --for=condition=complete --timeout=600s job/abseil
+  after_script:
+    - export KUBECONFIG=$PWD/terraform/kubeconfig_k8-cluster-$CI_PIPELINE_ID
+    - kubectl get all --all-namespaces
+    - kubectl -n buildfarm logs jobs/abseil
+    - kubectl delete namespace buildfarm
 
 cleanup-terraform-job:
   stage: cleanup

@@ -1,0 +1,33 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: buildfarm-worker
+  namespace: buildfarm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: worker
+      instance: buildfarm
+  template:
+    metadata:
+      labels:
+        app: worker
+        instance: buildfarm
+    spec:
+      containers:
+      - args:
+        - /etc/buildfarm/worker.config
+        image: werkt/buildfarm-worker:latest
+        name: worker
+        volumeMounts:
+        - mountPath: /etc/buildfarm
+          name: config
+        - mountPath: /worker
+          name: worker
+      volumes:
+      - configMap:
+          name: worker-config
+        name: config
+      - emptyDir: {}
+        name: worker

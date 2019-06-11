@@ -1,0 +1,49 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: buildfarm-server
+  namespace: buildfarm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: server
+      instance: buildfarm
+  template:
+    metadata:
+      labels:
+        app: server
+        instance: buildfarm
+    spec:
+      containers:
+      - args:
+        - /etc/buildfarm/server.config
+        image: werkt/buildfarm-server:latest
+        name: server
+        ports:
+        - containerPort: 80
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /etc/buildfarm
+          name: config
+      volumes:
+      - configMap:
+          items:
+          - key: server.config
+            path: server.config
+          name: server-config
+        name: config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: buildfarm-server
+  namespace: buildfarm
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+  selector:
+    app: server
+    instance: buildfarm
+  type: ClusterIP

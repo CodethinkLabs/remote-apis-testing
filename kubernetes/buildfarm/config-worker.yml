@@ -1,0 +1,77 @@
+apiVersion: v1
+data:
+  worker.config: |
+    digest_function: SHA256
+
+    operation_queue: {
+      target: "buildfarm-server"
+
+      instance_name: "ubuntu16-04"
+    }
+
+    content_addressable_storage: {
+      target: "buildfarm-server"
+
+      instance_name: "ubuntu16-04"
+    }
+
+    action_cache: {
+      target: "buildfarm-server"
+
+      instance_name: "ubuntu16-04"
+    }
+
+    root: "/worker"
+
+    cas_cache_directory: "cache"
+
+    inline_content_limit: 0
+
+    stream_stdout: true
+
+    stdout_cas_policy: ALWAYS_INSERT
+
+    stream_stderr: true
+
+    stderr_cas_policy: ALWAYS_INSERT
+
+    file_cas_policy: ALWAYS_INSERT
+
+    tree_page_size: 0
+
+    operation_poll_period: {
+      seconds: 1
+      nanos: 0
+    }
+
+    # must match ubuntu16-04 image required in bazel-build platform requirements
+    platform: {
+      properties: {
+        name: "container-image"
+        value: "docker://marketplace.gcr.io/google/rbe-ubuntu16-04@sha256:da0f21c71abce3bbb92c3a0c44c3737f007a82b60f8bd2930abc55fe64fc2729"
+      }
+    }
+
+    cas_cache_max_size_bytes: 2147483648 # 2 * 1024 * 1024 * 1024
+
+    execute_stage_width: 4
+
+    default_action_timeout: {
+      seconds: 600
+      nanos: 0
+    }
+
+    maximum_action_timeout: {
+      seconds: 3600
+      nanos: 0
+    }
+
+    execution_policies: {
+      wrapper: {
+        path: "/app/build_buildfarm/process-wrapper"
+      }
+    }
+kind: ConfigMap
+metadata:
+  name: worker-config
+  namespace: buildfarm

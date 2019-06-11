@@ -1,0 +1,19 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: abseil
+  namespace: buildfarm
+spec:
+  template:
+    metadata:
+      name: abseil
+    spec:
+      containers:
+      - name: abseil
+        image: remoteapistesting/bazel-build:latest
+        command:
+         - /bin/bash
+         - -c
+         - /bin/bazel-build-wrapper https://github.com/abseil/abseil-cpp --remote_executor=buildfarm-server //...:all
+      restartPolicy: Never
+  backoffLimit: 0
