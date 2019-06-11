@@ -1,0 +1,95 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: buildgrid-stack
+  namespace: buildgrid
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: buildgrid-stack
+  serviceName: buildgrid-stack
+  template:
+    metadata:
+      labels:
+        app: buildgrid-stack
+    spec:
+      containers:
+      - args:
+        - /usr/local/bin/bgd  
+        - server 
+        - start
+        - /config/artifacts.conf
+        image: registry.gitlab.com/buildgrid/buildgrid.hub.docker.com/buildgrid:nightly
+        name: buildgrid-stack
+        ports:
+        - containerPort: 50051
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /config
+          name: config
+        - mountPath: /cas
+          name: cas
+      volumes:
+      - configMap:
+          name: config-storage
+        name: config
+  volumeClaimTemplates:
+  - metadata:
+      name: cas
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 12Gi   
+---
+apiVersion: v1
+data:
+  artifacts.conf: |
+    server:
+      - !channel
+        port: 50051
+        insecure-mode: true
+    instances:
+      - name: main
+
+        storages:
+          - !lru-storage &main-storage
+            size: 512MB
+            
+        services:
+          - !action-cache &main-action
+            storage: *main-storage
+            max-cached-refs: 256
+            allow-updates: true
+
+          - !execution
+            storage: *main-storage
+            action-cache: *main-action
+
+          - !cas
+            storage: *main-storage
+
+          - !bytestream
+            storage: *main-storage
+kind: ConfigMap
+metadata:
+  name: config-storage
+  namespace: buildgrid
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: buildgrid-stack
+  namespace: buildgrid
+spec:
+  ports:
+  - port: 50051
+    protocol: TCP
+  selector:
+    app: buildgrid-stack
+  type: LoadBalancer
+
+
+
