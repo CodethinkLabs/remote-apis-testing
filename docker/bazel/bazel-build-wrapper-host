@@ -4,6 +4,7 @@
 git_repo=$1
 # All the remaining arguments will be passed to `bazel build`
 bazel_args="${@:2}"
+bazel_target="${@: -1}"
 
 echo "## bazelrc file:"
 cat bazelrc-host
@@ -21,4 +22,13 @@ echo "## end of WORKSPACE\n"
 
 # Execute bazel build
 set -x
+
+echo "Attempting to fetch target:"
+echo $bazel_target
+
+for i in {0..10}
+    do
+        bazel fetch $bazel_target && break
+    done
+
 bazel --bazelrc=/src/bazelrc build $bazel_args
