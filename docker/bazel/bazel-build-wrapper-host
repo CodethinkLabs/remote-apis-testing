@@ -2,8 +2,9 @@
 
 # First argument is the git repo to build with Bazel
 git_repo=$1
+git_ref=$2
 # All the remaining arguments will be passed to `bazel build`
-bazel_args="${@:2}"
+bazel_args="${@:3}"
 bazel_target="${@: -1}"
 
 echo "## bazelrc file:"
@@ -12,6 +13,7 @@ echo "## end of bazelrc\n"
 
 git clone $git_repo repo
 cd repo
+git checkout $git_ref
 
 # Rename bazel_toolchains if present
 sed -i -e 's/"bazel_toolchains"/"bazel_toolchains_old"/' WORKSPACE

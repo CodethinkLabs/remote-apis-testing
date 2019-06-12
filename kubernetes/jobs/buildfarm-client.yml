@@ -14,6 +14,6 @@ spec:
         command:
          - /bin/bash
          - -c
-         - /bin/bazel-build-wrapper https://github.com/abseil/abseil-cpp --remote_executor=buildfarm-server //absl/...
+         - /bin/bazel-build-wrapper https://github.com/abseil/abseil-cpp master --remote_executor=buildfarm-server //absl/...
       restartPolicy: Never
   backoffLimit: 0
