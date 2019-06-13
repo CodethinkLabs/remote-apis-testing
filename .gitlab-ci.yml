@@ -3,11 +3,19 @@ variables:
     TERRAFORM_VERSION: 0.11.13
     TERRAFORM_URL: https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
     AWS_IAM_URL: https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/linux/amd64/aws-iam-authenticator
+    BADGE_URL: https://img.shields.io/badge
+
+# May help with future badge making:
+# cat foo.log | sed -n -e s/,//g -e '/^INFO: Elapsed time:/p' | awk '{ print $4 }'
 
 stages:
   - build-images-and-terraform
   - bazel-kubernetes
-  - cleanup
+  - cleanup-and-deploy
+
+.before-badge-template: &before_badge |
+  apt-get update && apt install -yq curl
+  mkdir -p public
 
 .before-bazel-builds: &before_bazel_builds
   - mkdir -p ~/.docker
@@ -128,6 +136,7 @@ kubernetes-buildbarn:
   dependencies:
     - terraform-infra
   before_script:
+    - *before_badge
     - *before_kubernetes
     - |
       for service in frontend scheduler-ubuntu16-04 storage worker-ubuntu16-04; do
@@ -149,11 +158,16 @@ kubernetes-buildbarn:
     - kubectl create -f kubernetes/jobs/buildbarn-client.yml
     - kubectl -n buildbarn describe jobs/abseil
     - kubectl -n buildbarn wait --for=condition=complete --timeout=600s job/abseil
+    - curl -o public/buildbarn-deployed.svg $BADGE_URL/buildbarn-deployed-green.svg
   after_script:
     - export KUBECONFIG=$PWD/terraform/kubeconfig_k8-cluster-$CI_PIPELINE_ID
     - kubectl get all --all-namespaces
     - kubectl -n buildbarn logs jobs/abseil
     - kubectl delete namespace buildbarn
+  artifacts:
+    name: pages
+    paths:
+      - public/
 
 kubernetes-buildfarm:
   stage: bazel-kubernetes
@@ -161,6 +175,7 @@ kubernetes-buildfarm:
   dependencies:
     - terraform-infra
   before_script:
+    - *before_badge
     - *before_kubernetes
     - sed -i "s|:latest|:$CI_PIPELINE_ID|g" kubernetes/jobs/buildfarm-client.yml
   script:
@@ -175,11 +190,17 @@ kubernetes-buildfarm:
     - kubectl create -f kubernetes/jobs/buildfarm-client.yml
     - kubectl -n buildfarm describe jobs/abseil
     - kubectl -n buildfarm wait --for=condition=complete --timeout=600s job/abseil
+    - curl -o public/buildfarm-deployed.svg $BADGE_URL/buildfarm-deployed-green.svg
   after_script:
     - export KUBECONFIG=$PWD/terraform/kubeconfig_k8-cluster-$CI_PIPELINE_ID
     - kubectl get all --all-namespaces
     - kubectl -n buildfarm logs jobs/abseil
     - kubectl delete namespace buildfarm
+  artifacts:
+    name: pages
+    paths:
+      - public/
+
 
 kubernetes-buildgrid:
   stage: bazel-kubernetes
@@ -187,6 +208,7 @@ kubernetes-buildgrid:
   dependencies:
     - terraform-infra
   before_script:
+    - *before_badge
     - *before_kubernetes
   script:
     - export KUBECONFIG=$PWD/terraform/kubeconfig_k8-cluster-$CI_PIPELINE_ID
@@ -201,14 +223,20 @@ kubernetes-buildgrid:
     - kubectl create -f kubernetes/jobs/buildgrid-client.yml
     - kubectl -n buildgrid describe jobs/abseil
     - kubectl -n buildgrid wait --for=condition=complete --timeout=600s job/abseil
+    - curl -o public/buildgrid-deployed.svg $BADGE_URL/buildgrid-deployed-green.svg
   after_script:
     - export KUBECONFIG=$PWD/terraform/kubeconfig_k8-cluster-$CI_PIPELINE_ID
     - kubectl get all --all-namespaces
     - kubectl -n buildgrid logs jobs/abseil
     - kubectl delete namespace buildgrid
+  artifacts:
+    name: pages
+    paths:
+      - public/
+
 
 cleanup-terraform-job:
-  stage: cleanup
+  stage: cleanup-and-deploy
   image: $BASE_IMAGE
   dependencies:
     - terraform-infra
@@ -222,3 +250,27 @@ cleanup-terraform-job:
   variables:
     GIT_STRATEGY: none
   when: always
+
+pages:
+  stage: cleanup-and-deploy
+  image: $BASE_IMAGE
+  script:
+    - |
+      if [ ! -f "public/buildbarn-deployed.svg" ]; then
+        curl -o public/buildbarn-deployed.svg $BADGE_URL/buildbarn-deployed-red.svg
+      fi
+    - |
+      if [ ! -f "public/buildfarm-deployed.svg" ]; then
+        curl -o public/buildfarm-deployed.svg $BADGE_URL/buildfarm-deployed-red.svg
+      fi
+    - |
+      if [ ! -f "public/buildgrid-deployed.svg" ]; then
+        curl -o public/buildgrid-deployed.svg $BADGE_URL/buildgrid-deployed-red.svg
+      fi
+  artifacts:
+    name: pages
+    paths:
+    - public/
+  when: always
+  only:
+    - master
