@@ -254,6 +254,8 @@ cleanup-terraform-job:
 pages:
   stage: cleanup-and-deploy
   image: $BASE_IMAGE
+  before_script:
+    - *before_badge
   script:
     - |
       if [ ! -f "public/buildbarn-deployed.svg" ]; then
