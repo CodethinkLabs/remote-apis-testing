@@ -157,7 +157,7 @@ kubernetes-buildbarn:
     - sleep 30
     - kubectl create -f kubernetes/jobs/buildbarn-client.yml
     - kubectl -n buildbarn describe jobs/abseil
-    - kubectl -n buildbarn wait --for=condition=complete --timeout=600s job/abseil
+    - kubectl -n buildbarn wait --for=condition=complete --timeout=1200s job/abseil
     - curl -o public/buildbarn-deployed.svg $BADGE_URL/buildbarn-deployed-green.svg
   after_script:
     - export KUBECONFIG=$PWD/terraform/kubeconfig_k8-cluster-$CI_PIPELINE_ID
@@ -189,7 +189,7 @@ kubernetes-buildfarm:
     - sleep 30
     - kubectl create -f kubernetes/jobs/buildfarm-client.yml
     - kubectl -n buildfarm describe jobs/abseil
-    - kubectl -n buildfarm wait --for=condition=complete --timeout=600s job/abseil
+    - kubectl -n buildfarm wait --for=condition=complete --timeout=1200s job/abseil
     - curl -o public/buildfarm-deployed.svg $BADGE_URL/buildfarm-deployed-green.svg
   after_script:
     - export KUBECONFIG=$PWD/terraform/kubeconfig_k8-cluster-$CI_PIPELINE_ID
@@ -222,7 +222,7 @@ kubernetes-buildgrid:
     - sleep 30
     - kubectl create -f kubernetes/jobs/buildgrid-client.yml
     - kubectl -n buildgrid describe jobs/abseil
-    - kubectl -n buildgrid wait --for=condition=complete --timeout=600s job/abseil
+    - kubectl -n buildgrid wait --for=condition=complete --timeout=1200s job/abseil
     - curl -o public/buildgrid-deployed.svg $BADGE_URL/buildgrid-deployed-green.svg
   after_script:
     - export KUBECONFIG=$PWD/terraform/kubeconfig_k8-cluster-$CI_PIPELINE_ID
