@@ -4,35 +4,34 @@ metadata:
   name: worker-ubuntu16-04
   namespace: buildbarn
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: worker
       instance: ubuntu16-04
   template:
     metadata:
-      annotations:
-        prometheus.io/port: "80"
-        prometheus.io/scrape: "true"
       labels:
         app: worker
         instance: ubuntu16-04
     spec:
       containers:
       - args:
-        - -browser-url=http://bb-browser.example.com/
-        - -concurrency=4
-        - -scheduler=scheduler-ubuntu16-04:8981
+        - /config/worker.json
         image: remoteapistesting/bb-worker:latest
         name: worker
         volumeMounts:
         - mountPath: /config
-          name: config
+          name: config-worker
         - mountPath: /worker
           name: worker
-      - image: remoteapistesting/bb-runner-ubuntu16-04:latest
+      - args:
+        - /config/runner.json
+        image: remoteapistesting/bb-runner-ubuntu16-04:latest
         name: runner
         volumeMounts:
+        - mountPath: /config
+          name: config-runner
         - mountPath: /worker
           name: worker
       initContainers:
@@ -47,7 +46,10 @@ spec:
           name: worker
       volumes:
       - configMap:
-          name: config-storage-clients
-        name: config
+          name: worker
+        name: config-worker
       - emptyDir: {}
         name: worker
+      - configMap:
+          name: runner
+        name: config-runner

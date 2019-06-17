@@ -78,12 +78,12 @@ build-buildbarn-remote-execution:
           output_dir="bb-remote-execution/bazel-bin/cmd/${service_folder}"
 
           if [ "$CI_COMMIT_REF_NAME" == "master" ]; then
-              (cd bb-remote-execution && bazel build //cmd/${service_folder}:${service}_container_push)
+              (cd bb-remote-execution && bazel build --host_force_python=PY2 //cmd/${service_folder}:${service}_container_push)
               sed -i $output_dir/${service}_container_push -e "s#index.docker.io/buildbarn/\(.*\):{BUILD_SCM_TIMESTAMP}-{BUILD_SCM_REVISION}#index.docker.io/$DOCKER_ACCOUNT/\1:latest#"
               bash $output_dir/${service}_container_push
           fi
 
-          (cd bb-remote-execution && bazel build //cmd/${service_folder}:${service}_container_push)
+          (cd bb-remote-execution && bazel build --host_force_python=PY2 //cmd/${service_folder}:${service}_container_push)
           sed -i $output_dir/${service}_container_push -e "s#index.docker.io/buildbarn/\(.*\):{BUILD_SCM_TIMESTAMP}-{BUILD_SCM_REVISION}#index.docker.io/$DOCKER_ACCOUNT/\1:$CI_PIPELINE_ID#"
           bash $output_dir/${service}_container_push
       done
@@ -98,12 +98,12 @@ build-buildbarn-remote-execution:
 
     - |
       if [ "$CI_COMMIT_REF_NAME" == "master" ]; then
-          (cd ${SERVICE} && bazel build //cmd/${SERVICE}:${SERVICE}_container_push)
+          (cd ${SERVICE} && bazel build --host_force_python=PY2 //cmd/${SERVICE}:${SERVICE}_container_push)
           sed -i $output_dir/${SERVICE}_container_push -e "s#index.docker.io/buildbarn/\(.*\):{BUILD_SCM_TIMESTAMP}-{BUILD_SCM_REVISION}#index.docker.io/$DOCKER_ACCOUNT/\1:latest#"
           bash $output_dir/${SERVICE}_container_push
       fi
 
-    - (cd ${SERVICE} && bazel build //cmd/${SERVICE}:${SERVICE}_container_push)
+    - (cd ${SERVICE} && bazel build --host_force_python=PY2 //cmd/${SERVICE}:${SERVICE}_container_push)
     - sed -i $output_dir/${SERVICE}_container_push -e "s#index.docker.io/buildbarn/\(.*\):{BUILD_SCM_TIMESTAMP}-{BUILD_SCM_REVISION}#index.docker.io/$DOCKER_ACCOUNT/\1:$CI_PIPELINE_ID#"
     - bash $output_dir/${SERVICE}_container_push
 
