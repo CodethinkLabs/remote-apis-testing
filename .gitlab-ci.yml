@@ -168,6 +168,7 @@ kubernetes-buildbarn:
     name: pages
     paths:
       - public/
+  allow_failure: true
 
 kubernetes-buildfarm:
   stage: bazel-kubernetes
@@ -200,7 +201,7 @@ kubernetes-buildfarm:
     name: pages
     paths:
       - public/
-
+  allow_failure: true
 
 kubernetes-buildgrid:
   stage: bazel-kubernetes
@@ -233,6 +234,7 @@ kubernetes-buildgrid:
     name: pages
     paths:
       - public/
+  allow_failure: true
 
 
 cleanup-terraform-job:
