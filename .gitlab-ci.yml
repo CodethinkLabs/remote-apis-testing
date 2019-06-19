@@ -151,7 +151,7 @@ kubernetes-buildbarn:
     - kubectl -n buildbarn rollout status deployment.apps/frontend
     - kubectl -n buildbarn rollout status deployment.apps/worker-ubuntu16-04
     - kubectl -n buildbarn rollout status statefulset.apps/storage
-    - until kubectl get pods --field-selector=status.phase!=Running --all-namespaces 2>&1 | grep -q "No resources found."; do kubectl -n buildbarn get pods; sleep 10; done
+    - until kubectl -n buildbarn get pods --field-selector=status.phase!=Running 2>&1 | grep -q "No resources found."; do kubectl -n buildbarn get pods; sleep 10; done
     - kubectl get all --all-namespaces
     # TODO: See issue #14
     - sleep 30
@@ -184,7 +184,7 @@ kubernetes-buildfarm:
     - kubectl create -f kubernetes/buildfarm
     - kubectl -n buildfarm rollout status deployment.apps/buildfarm-server
     - kubectl -n buildfarm rollout status deployment.apps/buildfarm-worker
-    - until kubectl get pods --field-selector=status.phase!=Running --all-namespaces 2>&1 | grep -q "No resources found."; do kubectl -n buildfarm get pods; sleep 10; done
+    - until kubectl -n buildfarm get pods --field-selector=status.phase!=Running 2>&1 | grep -q "No resources found."; do kubectl -n buildfarm get pods; sleep 10; done
     - kubectl get all --all-namespaces
     # TODO: See issue #14
     - sleep 30
@@ -217,7 +217,7 @@ kubernetes-buildgrid:
     - kubectl create -f kubernetes/buildgrid/
     - kubectl -n buildgrid rollout status statefulset buildgrid-stack
     - kubectl -n buildgrid rollout status deployment.apps/worker
-    - until kubectl get pods --field-selector=status.phase!=Running --all-namespaces 2>&1 | grep -q "No resources found."; do kubectl -n buildgrid get pods; sleep 10; done
+    - until kubectl -n buildgrid get pods --field-selector=status.phase!=Running 2>&1 | grep -q "No resources found."; do kubectl -n buildgrid get pods; sleep 10; done
     - kubectl get all --all-namespaces
     # TODO: See issue #14
     - sleep 30
