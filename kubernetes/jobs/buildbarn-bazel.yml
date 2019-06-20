@@ -1,0 +1,19 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: bazel
+  namespace: buildbarn
+spec:
+  template:
+    metadata:
+      name: bazel
+    spec:
+      containers:
+      - name: bazel
+        image: remoteapistesting/bazel-build:latest
+        command:
+         - /bin/bash
+         - -c
+         - /bin/bazel-build-wrapper https://github.com/bazelbuild/bazel 0.26.1 --sandbox_debug --incompatible_new_actions_api=false --incompatible_no_support_tools_in_action_inputs=false --remote_executor=frontend:8980 //src:bazel
+      restartPolicy: Never
+  backoffLimit: 0
