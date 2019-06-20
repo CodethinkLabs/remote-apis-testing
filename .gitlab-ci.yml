@@ -78,12 +78,12 @@ build-buildbarn-remote-execution:
           output_dir="bb-remote-execution/bazel-bin/cmd/${service_folder}"
 
           if [ "$CI_COMMIT_REF_NAME" == "master" ]; then
-              (cd bb-remote-execution && bazel build //cmd/${service_folder}:${service}_container_push)
+              (cd bb-remote-execution && bazel build --host_force_python=PY2 //cmd/${service_folder}:${service}_container_push)
               sed -i $output_dir/${service}_container_push -e "s#index.docker.io/buildbarn/\(.*\):{BUILD_SCM_TIMESTAMP}-{BUILD_SCM_REVISION}#index.docker.io/$DOCKER_ACCOUNT/\1:latest#"
               bash $output_dir/${service}_container_push
           fi
 
-          (cd bb-remote-execution && bazel build //cmd/${service_folder}:${service}_container_push)
+          (cd bb-remote-execution && bazel build --host_force_python=PY2 //cmd/${service_folder}:${service}_container_push)
           sed -i $output_dir/${service}_container_push -e "s#index.docker.io/buildbarn/\(.*\):{BUILD_SCM_TIMESTAMP}-{BUILD_SCM_REVISION}#index.docker.io/$DOCKER_ACCOUNT/\1:$CI_PIPELINE_ID#"
           bash $output_dir/${service}_container_push
       done
@@ -98,12 +98,12 @@ build-buildbarn-remote-execution:
 
     - |
       if [ "$CI_COMMIT_REF_NAME" == "master" ]; then
-          (cd ${SERVICE} && bazel build //cmd/${SERVICE}:${SERVICE}_container_push)
+          (cd ${SERVICE} && bazel build --host_force_python=PY2 //cmd/${SERVICE}:${SERVICE}_container_push)
           sed -i $output_dir/${SERVICE}_container_push -e "s#index.docker.io/buildbarn/\(.*\):{BUILD_SCM_TIMESTAMP}-{BUILD_SCM_REVISION}#index.docker.io/$DOCKER_ACCOUNT/\1:latest#"
           bash $output_dir/${SERVICE}_container_push
       fi
 
-    - (cd ${SERVICE} && bazel build //cmd/${SERVICE}:${SERVICE}_container_push)
+    - (cd ${SERVICE} && bazel build --host_force_python=PY2 //cmd/${SERVICE}:${SERVICE}_container_push)
     - sed -i $output_dir/${SERVICE}_container_push -e "s#index.docker.io/buildbarn/\(.*\):{BUILD_SCM_TIMESTAMP}-{BUILD_SCM_REVISION}#index.docker.io/$DOCKER_ACCOUNT/\1:$CI_PIPELINE_ID#"
     - bash $output_dir/${SERVICE}_container_push
 
@@ -151,7 +151,7 @@ kubernetes-buildbarn:
     - kubectl -n buildbarn rollout status deployment.apps/frontend
     - kubectl -n buildbarn rollout status deployment.apps/worker-ubuntu16-04
     - kubectl -n buildbarn rollout status statefulset.apps/storage
-    - until kubectl get pods --field-selector=status.phase!=Running --all-namespaces 2>&1 | grep -q "No resources found."; do kubectl -n buildbarn get pods; sleep 10; done
+    - until kubectl -n buildbarn get pods --field-selector=status.phase!=Running 2>&1 | grep -q "No resources found."; do kubectl -n buildbarn get pods; sleep 10; done
     - kubectl get all --all-namespaces
     # TODO: See issue #14
     - sleep 30
@@ -168,6 +168,7 @@ kubernetes-buildbarn:
     name: pages
     paths:
       - public/
+  allow_failure: true
 
 kubernetes-buildfarm:
   stage: bazel-kubernetes
@@ -183,7 +184,7 @@ kubernetes-buildfarm:
     - kubectl create -f kubernetes/buildfarm
     - kubectl -n buildfarm rollout status deployment.apps/buildfarm-server
     - kubectl -n buildfarm rollout status deployment.apps/buildfarm-worker
-    - until kubectl get pods --field-selector=status.phase!=Running --all-namespaces 2>&1 | grep -q "No resources found."; do kubectl -n buildfarm get pods; sleep 10; done
+    - until kubectl -n buildfarm get pods --field-selector=status.phase!=Running 2>&1 | grep -q "No resources found."; do kubectl -n buildfarm get pods; sleep 10; done
     - kubectl get all --all-namespaces
     # TODO: See issue #14
     - sleep 30
@@ -200,7 +201,7 @@ kubernetes-buildfarm:
     name: pages
     paths:
       - public/
-
+  allow_failure: true
 
 kubernetes-buildgrid:
   stage: bazel-kubernetes
@@ -216,7 +217,7 @@ kubernetes-buildgrid:
     - kubectl create -f kubernetes/buildgrid/
     - kubectl -n buildgrid rollout status statefulset buildgrid-stack
     - kubectl -n buildgrid rollout status deployment.apps/worker
-    - until kubectl get pods --field-selector=status.phase!=Running --all-namespaces 2>&1 | grep -q "No resources found."; do kubectl -n buildgrid get pods; sleep 10; done
+    - until kubectl -n buildgrid get pods --field-selector=status.phase!=Running 2>&1 | grep -q "No resources found."; do kubectl -n buildgrid get pods; sleep 10; done
     - kubectl get all --all-namespaces
     # TODO: See issue #14
     - sleep 30
@@ -233,6 +234,7 @@ kubernetes-buildgrid:
     name: pages
     paths:
       - public/
+  allow_failure: true
 
 
 cleanup-terraform-job:

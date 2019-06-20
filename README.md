@@ -25,7 +25,7 @@ Currently this project tests a Bazel build of Abseil against Buildbarn.
 
 | --- | BuildGrid | BuildFarm | Buildbarn |
 | -------- | -------- | -------- | -------- |
-| Bazel  | Success (Host-tools) | Success | Success |
+| Bazel  | ![](https://gitlab.com/remote-apis-testing/remote-apis-testing/builds/artifacts/master/raw/public/buildgrid-deployed.svg?job=pages) | ![](https://gitlab.com/remote-apis-testing/remote-apis-testing/builds/artifacts/master/raw/public/buildfarm-deployed.svg?job=pages) | ![](https://gitlab.com/remote-apis-testing/remote-apis-testing/builds/artifacts/master/raw/public/buildbarn-deployed.svg?job=pages) |
 | BuildStream  | TBA | TBA | TBA |
 | RECC | TBA | TBA | TBA |
 

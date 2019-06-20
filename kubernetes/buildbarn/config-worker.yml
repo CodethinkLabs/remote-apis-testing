@@ -1,0 +1,23 @@
+apiVersion: v1
+data:
+  worker.json: |
+    {
+      "blobstore": {
+        "contentAddressableStorage": {
+          "grpc": {
+            "endpoint": "storage-0.storage:8980"
+          }
+        },
+        "actionCache": {
+          "grpc": {
+            "endpoint": "storage-0.storage:8980"
+          }
+        }
+      },
+      "concurrency": 4,
+      "schedulerAddress": "scheduler-ubuntu16-04:8981"
+    }
+kind: ConfigMap
+metadata:
+  name: worker
+  namespace: buildbarn
