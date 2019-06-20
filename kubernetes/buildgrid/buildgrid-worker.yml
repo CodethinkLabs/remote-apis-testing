@@ -15,8 +15,15 @@ spec:
     spec:
       containers:
       - name: worker
-        image: registry.gitlab.com/buildgrid/buildgrid.hub.docker.com/buildgrid:nightly
-        command: ["bgd","bot","--remote=http://buildgrid-stack:50051", "--parent=main", "host-tools"]
+        image: registry.gitlab.com/buildgrid/buildgrid.hub.docker.com/buildbox:nightly
+        command:
+          - "buildbox-worker"
+          - "--instance=main"
+          - "--bots-instance=main"
+          - "--cas-instance=main"
+          - "--bots-remote=http://buildgrid-stack:50051"
+          - "--cas-remote=http://buildgrid-stack:50051"
+          - "--buildbox-run=/usr/local/bin/buildbox-run-hosttools"
         ports:
         - containerPort: 50051
           protocol: TCP
