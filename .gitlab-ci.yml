@@ -174,12 +174,13 @@ kubernetes-buildbarn:
     - sleep 30
     - kubectl create -f kubernetes/jobs/buildbarn-client.yml
     - kubectl -n buildbarn describe jobs/abseil
-    - kubectl -n buildbarn wait --for=condition=complete --timeout=1200s job/abseil
+    - until kubectl -n buildbarn get pods --field-selector=status.phase!=Running 2>&1 | grep -q "No resources found."; do kubectl -n buildbarn get pods; sleep 10; done
+    - kubectl -n buildbarn logs --follow jobs/abseil
+    - kubectl -n buildbarn wait --for=condition=complete --timeout=5s job/abseil
     - curl -o public/buildbarn-deployed.svg $BADGE_URL/buildbarn-deployed-green.svg
   after_script:
     - export KUBECONFIG=$PWD/terraform/kubeconfig_k8-cluster-$CI_PIPELINE_ID
     - kubectl get all --all-namespaces
-    - kubectl -n buildbarn logs jobs/abseil
     - kubectl delete namespace buildbarn
   artifacts:
     name: pages
@@ -210,12 +211,13 @@ kubernetes-buildfarm:
     - sleep 30
     - kubectl create -f kubernetes/jobs/buildfarm-client.yml
     - kubectl -n buildfarm describe jobs/abseil
-    - kubectl -n buildfarm wait --for=condition=complete --timeout=1200s job/abseil
+    - until kubectl -n buildfarm get pods --field-selector=status.phase!=Running 2>&1 | grep -q "No resources found."; do kubectl -n buildfarm get pods; sleep 10; done
+    - kubectl -n buildfarm logs --follow jobs/abseil
+    - kubectl -n buildfarm wait --for=condition=complete --timeout=5s job/abseil
     - curl -o public/buildfarm-deployed.svg $BADGE_URL/buildfarm-deployed-green.svg
   after_script:
     - export KUBECONFIG=$PWD/terraform/kubeconfig_k8-cluster-$CI_PIPELINE_ID
     - kubectl get all --all-namespaces
-    - kubectl -n buildfarm logs jobs/abseil
     - kubectl delete namespace buildfarm
   artifacts:
     name: pages
@@ -246,12 +248,13 @@ kubernetes-buildgrid:
     - sleep 30
     - kubectl create -f kubernetes/jobs/buildgrid-client.yml
     - kubectl -n buildgrid describe jobs/abseil
-    - kubectl -n buildgrid wait --for=condition=complete --timeout=1800s job/abseil
+    - until kubectl -n buildgrid get pods --field-selector=status.phase!=Running 2>&1 | grep -q "No resources found."; do kubectl -n buildgrid get pods; sleep 10; done
+    - kubectl -n buildgrid logs --follow jobs/abseil
+    - kubectl -n buildgrid wait --for=condition=complete --timeout=5s job/abseil
     - curl -o public/buildgrid-deployed.svg $BADGE_URL/buildgrid-deployed-green.svg
   after_script:
     - export KUBECONFIG=$PWD/terraform/kubeconfig_k8-cluster-$CI_PIPELINE_ID
     - kubectl get all --all-namespaces
-    - kubectl -n buildgrid logs jobs/abseil
     - kubectl delete namespace buildgrid
   artifacts:
     name: pages
