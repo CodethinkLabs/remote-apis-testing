@@ -305,6 +305,9 @@ kubernetes-buildbarn-bazel:
     name: pages
     paths:
       - public/
+  only:
+    refs:
+      - master
   except:
     changes:
       - "*.md"
@@ -344,6 +347,9 @@ kubernetes-buildfarm-bazel:
     name: pages
     paths:
       - public/
+  only:
+    refs:
+      - master
   except:
     changes:
       - "*.md"
@@ -383,6 +389,9 @@ kubernetes-buildgrid-bazel:
     name: pages
     paths:
       - public/
+  only:
+    refs:
+      - master
   except:
     changes:
       - "*.md"
@@ -444,7 +453,8 @@ pages:
     - public/
   when: always
   only:
-    - master
+    refs:
+      - master
   except:
     changes:
       - "*.md"
