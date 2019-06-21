@@ -288,15 +288,15 @@ pages:
   script:
     - |
       if [ ! -f "public/buildbarn-deployed.svg" ]; then
-        curl -o public/buildbarn-deployed.svg $BADGE_URL/buildbarn-deployed-red.svg
+        curl -o public/buildbarn-deployed.svg $BADGE_URL/buildbarn-failed-red.svg
       fi
     - |
       if [ ! -f "public/buildfarm-deployed.svg" ]; then
-        curl -o public/buildfarm-deployed.svg $BADGE_URL/buildfarm-deployed-red.svg
+        curl -o public/buildfarm-deployed.svg $BADGE_URL/buildfarm-failed-red.svg
       fi
     - |
       if [ ! -f "public/buildgrid-deployed.svg" ]; then
-        curl -o public/buildgrid-deployed.svg $BADGE_URL/buildgrid-deployed-red.svg
+        curl -o public/buildgrid-deployed.svg $BADGE_URL/buildgrid-failed-red.svg
       fi
   artifacts:
     name: pages
