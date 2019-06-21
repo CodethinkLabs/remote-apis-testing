@@ -247,7 +247,7 @@ kubernetes-buildgrid:
     - sleep 30
     - kubectl create -f kubernetes/jobs/buildgrid-client.yml
     - kubectl -n buildgrid describe jobs/abseil
-    - kubectl -n buildgrid wait --for=condition=complete --timeout=1200s job/abseil
+    - kubectl -n buildgrid wait --for=condition=complete --timeout=1800s job/abseil
     - curl -o public/buildgrid-deployed.svg $BADGE_URL/buildgrid-deployed-green.svg
   after_script:
     - export KUBECONFIG=$PWD/terraform/kubeconfig_k8-cluster-$CI_PIPELINE_ID
