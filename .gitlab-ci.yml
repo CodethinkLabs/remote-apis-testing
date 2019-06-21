@@ -303,6 +303,9 @@ kubernetes-buildbarn-bazel:
     name: pages
     paths:
       - public/
+  except:
+    changes:
+      - "*.md"
   allow_failure: true
 
 kubernetes-buildfarm-bazel:
@@ -339,6 +342,9 @@ kubernetes-buildfarm-bazel:
     name: pages
     paths:
       - public/
+  except:
+    changes:
+      - "*.md"
   allow_failure: true
 
 
@@ -375,6 +381,9 @@ kubernetes-buildgrid-bazel:
     name: pages
     paths:
       - public/
+  except:
+    changes:
+      - "*.md"
   allow_failure: true
 
 
