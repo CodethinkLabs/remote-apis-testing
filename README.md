@@ -87,3 +87,19 @@ To see the logs of a job, you can use for example:
 ```
 kubectl logs jobs/abseil -n buildbarn
 ```
+
+## Local Testing
+
+You can test changes to the Kubernetes deployments locally (avoiding the
+need for a cloud provider) with [minikube](https://github.com/kubernetes/minikube).
+Note that you'll need at least 4GB of RAM available to your cluster,
+which can be achieved with the following command:
+
+```
+minikube start --vm-driver kvm2 --memory 4096
+```
+
+Assuming you already have `kubectl` installed, this command will also
+configure it to use your minikube cluster. After this you can use `kubectl`
+commands as described above against your cluster to test your changes as
+needed.
