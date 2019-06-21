@@ -329,7 +329,7 @@ kubernetes-buildfarm-bazel:
     - kubectl -n buildfarm describe jobs/bazel
     - until kubectl -n buildfarm get pods --field-selector=status.phase!=Running 2>&1 | grep -q "No resources found."; do kubectl -n buildfarm get pods; sleep 10; done
     - kubectl -n buildfarm logs --follow jobs/bazel
-    - kubectl -n buildfarm wait --for=condition=complete --timeout=50s job/bazel
+    - kubectl -n buildfarm wait --for=condition=complete --timeout=5s job/bazel
     - curl -o public/buildfarm-deployed.svg $BADGE_URL/buildfarm-deployed-green.svg
     - "time=$(kubectl -n buildfarm logs --tail=10 jobs/bazel | sed -n -e s/,//g -e '/^INFO: Elapsed time:/p' | awk '{ print $4 }')"
     - curl -o public/buildfarm-time.svg $BADGE_URL/buildfram_bazel_build-$time-green.svg
