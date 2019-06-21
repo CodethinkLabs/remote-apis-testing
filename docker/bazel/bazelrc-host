@@ -1,5 +1,3 @@
 build --experimental_strict_action_env
-build --genrule_strategy=remote
-build --spawn_strategy=remote
 build --strategy=Closure=remote
 build --strategy=Javac=remote

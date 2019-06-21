@@ -14,6 +14,6 @@ spec:
         command:
          - /bin/bash
          - -c
-         - /bin/bazel-build-wrapper https://github.com/abseil/abseil-cpp --sandbox_debug --remote_executor=frontend:8980 //absl/...
+         - /bin/bazel-build-wrapper https://github.com/abseil/abseil-cpp master --sandbox_debug --remote_executor=frontend:8980 //absl/...
       restartPolicy: Never
   backoffLimit: 0

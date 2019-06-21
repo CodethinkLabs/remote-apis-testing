@@ -14,6 +14,6 @@ spec:
         command:
          - /bin/bash
          - -c
-         - /bin/bazel-build-wrapper https://github.com/abseil/abseil-cpp --spawn_strategy=remote --genrule_strategy=remote --remote_executor=buildgrid-stack:50051 --remote_instance_name=main //absl/...
+         - /bin/bazel-build-wrapper https://github.com/abseil/abseil-cpp master --spawn_strategy=remote --genrule_strategy=remote --remote_executor=buildgrid-stack:50051 --remote_instance_name=main //absl/...
       restartPolicy: Never
   backoffLimit: 0
