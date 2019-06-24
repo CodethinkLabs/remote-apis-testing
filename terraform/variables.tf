@@ -11,14 +11,15 @@ variable "node_min_size" {
 }
 
 variable "node_type" {
-  type    = "string"
+  type    = string
   default = "c5.xlarge"
 }
 
 variable "cluster_id" {
-  type = "string"
+  type = string
 }
 
 variable "s3_number" {
   default = 0
 }
+
