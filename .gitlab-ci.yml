@@ -1,6 +1,6 @@
 variables:
     BASE_IMAGE: ubuntu:18.04
-    TERRAFORM_VERSION: 0.11.13
+    TERRAFORM_VERSION: 0.12.2
     TERRAFORM_URL: https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
     AWS_IAM_URL: https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/linux/amd64/aws-iam-authenticator
     BADGE_URL: https://img.shields.io/badge
