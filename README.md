@@ -19,25 +19,35 @@ The initial test will be builds of [Abseil](https://github.com/abseil) and [Baze
 
 As a later step, we may want to develop more granular testing of the API, running through all of the gRPC calls and assessing them against the protocol defined in the API.
 
+
 ## Status
 
 This shows a build of Abseil with Bazel against three remote execution implementations.
 
-| --- | BuildGrid | BuildFarm | Buildbarn |
-| -------- | -------- | -------- | -------- |
-| Bazel  | ![](https://gitlab.com/remote-apis-testing/remote-apis-testing/builds/artifacts/master/raw/public/buildgrid-deployed.svg?job=pages) | ![](https://gitlab.com/remote-apis-testing/remote-apis-testing/builds/artifacts/master/raw/public/buildfarm-deployed.svg?job=pages) | ![](https://gitlab.com/remote-apis-testing/remote-apis-testing/builds/artifacts/master/raw/public/buildbarn-deployed.svg?job=pages) |
-| BuildStream  | TBA | TBA | TBA |
-| RECC | TBA | TBA | TBA |
+|             | BuildGrid             | Buildfarm             | Buildbarn             |
+| ----------- | --------------------- | --------------------- | --------------------- |
+| Bazel       | ![][abseil-buildgrid] | ![][abseil-buildfarm] | ![][abseil-buildbarn] |
+| BuildStream | TBA                   | TBA                   | TBA                   |
+| RECC        | TBA                   | TBA                   | TBA                   |
+
+[abseil-buildgrid]: https://gitlab.com/remote-apis-testing/remote-apis-testing/builds/artifacts/master/raw/public/buildgrid-deployed.svg?job=pages
+[abseil-buildfarm]: https://gitlab.com/remote-apis-testing/remote-apis-testing/builds/artifacts/master/raw/public/buildfarm-deployed.svg?job=pages
+[abseil-buildbarn]: https://gitlab.com/remote-apis-testing/remote-apis-testing/builds/artifacts/master/raw/public/buildbarn-deployed.svg?job=pages
+
 
 ## Timing
 
 This shows a build of Bazel with Bazel to produce the following timing information.
 
-| --- | CAS | No. Workers | Concurrency per worker |
-| -------- | -------- | -------- | -------- |
-| ![](https://gitlab.com/remote-apis-testing/remote-apis-testing/builds/artifacts/master/raw/public/buildgrid-time.svg?job=pages) | In memory | 1 | 1 |
-| ![](https://gitlab.com/remote-apis-testing/remote-apis-testing/builds/artifacts/master/raw/public/buildfarm-time.svg?job=pages) | In memory  | 1 | 4 |
-| ![](https://gitlab.com/remote-apis-testing/remote-apis-testing/builds/artifacts/master/raw/public/buildbarn-time.svg?job=pages) | Disk  | 1 | 4 |
+|                      | CAS        | No. Workers | Concurrency per worker |
+| -------------------- | ---------- | ----------- | ---------------------- |
+| ![][bazel-buildgrid] | In memory  | 1           | 1                      |
+| ![][bazel-buildfarm] | In memory  | 1           | 4                      |
+| ![][bazel-buildbarn] | Disk       | 1           | 4                      |
+
+[bazel-buildgrid]: https://gitlab.com/remote-apis-testing/remote-apis-testing/builds/artifacts/master/raw/public/buildgrid-time.svg?job=pages
+[bazel-buildfarm]: https://gitlab.com/remote-apis-testing/remote-apis-testing/builds/artifacts/master/raw/public/buildfarm-time.svg?job=pages
+[bazel-buildbarn]: https://gitlab.com/remote-apis-testing/remote-apis-testing/builds/artifacts/master/raw/public/buildbarn-time.svg?job=pages
 
 
 ### Terraform
