@@ -338,7 +338,7 @@ kubernetes-buildfarm-bazel:
     - kubectl -n buildfarm wait --for=condition=complete --timeout=5s job/bazel
     - curl -o public/buildfarm-deployed.svg $BADGE_URL/buildfarm-deployed-green.svg
     - "time=$(kubectl -n buildfarm logs --tail=10 jobs/bazel | sed -n -e s/,//g -e '/^INFO: Elapsed time:/p' | awk '{ print $4 }')"
-    - curl -o public/buildfarm-time.svg $BADGE_URL/buildfram_bazel_build-$time-green.svg
+    - curl -o public/buildfarm-time.svg $BADGE_URL/buildfarm_bazel_build-$time-green.svg
   after_script:
     - export KUBECONFIG=$PWD/terraform/kubeconfig_k8-cluster-$CI_PIPELINE_ID
     - kubectl get all --all-namespaces
@@ -437,15 +437,15 @@ pages:
       fi
     - |
       if [ ! -f "public/buildbarn-time.svg" ]; then
-        curl -o public/buildbarn-time.svg $BADGE_URL/buildfram_bazel_build-failed-red.svg
+        curl -o public/buildbarn-time.svg $BADGE_URL/buildbarn_bazel_build-failed-red.svg
       fi
     - |
       if [ ! -f "public/buildfarm-time.svg" ]; then
-        curl -o public/buildfarm-time.svg $BADGE_URL/buildfram_bazel_build-failed-red.svg
+        curl -o public/buildfarm-time.svg $BADGE_URL/buildfarm_bazel_build-failed-red.svg
       fi
     - |
       if [ ! -f "public/buildgrid-time.svg" ]; then
-        curl -o public/buildgrid-time.svg $BADGE_URL/buildfram_bazel_build-failed-red.svg
+        curl -o public/buildgrid-time.svg $BADGE_URL/buildgrid_bazel_build-failed-red.svg
       fi
   artifacts:
     name: pages
