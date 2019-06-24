@@ -73,6 +73,8 @@ data:
 
           - !bytestream
             storage: *main-storage
+    thread-pool-size: 100
+
 kind: ConfigMap
 metadata:
   name: config-storage
