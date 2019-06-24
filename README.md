@@ -15,19 +15,30 @@ Potential additional targets are:
 
 The initial aim is to test the latest version of Bazel against the latest versions of Buildbarn, Buildfarm and BuildGrid on a continuous basis, producing a compatibility matrix
 
-The initial test will be builds of [Abseil](https://abseil.io/) and [Tensorflow](https://www.tensorflow.org/). This will be achieved using Gitlab CI, Terraform and Kubernetes with AWS.
+The initial test will be builds of [Abseil](https://github.com/abseil) and [Bazel](https://github.com/bazelbuild/bazel). This will be achieved using Gitlab CI, Terraform and Kubernetes with AWS.
 
 As a later step, we may want to develop more granular testing of the API, running through all of the gRPC calls and assessing them against the protocol defined in the API.
 
 ## Status
 
-Currently this project tests a Bazel build of Abseil against Buildbarn.
+This shows a build of Abseil with Bazel against three remote execution implementations.
 
 | --- | BuildGrid | BuildFarm | Buildbarn |
 | -------- | -------- | -------- | -------- |
 | Bazel  | ![](https://gitlab.com/remote-apis-testing/remote-apis-testing/builds/artifacts/master/raw/public/buildgrid-deployed.svg?job=pages) | ![](https://gitlab.com/remote-apis-testing/remote-apis-testing/builds/artifacts/master/raw/public/buildfarm-deployed.svg?job=pages) | ![](https://gitlab.com/remote-apis-testing/remote-apis-testing/builds/artifacts/master/raw/public/buildbarn-deployed.svg?job=pages) |
 | BuildStream  | TBA | TBA | TBA |
 | RECC | TBA | TBA | TBA |
+
+## Timing
+
+This shows a build of Bazel with Bazel to produce the following timing information.
+
+| --- | CAS | No. Workers | Concurrency per worker |
+| -------- | -------- | -------- | -------- |
+| ![](https://gitlab.com/remote-apis-testing/remote-apis-testing/builds/artifacts/master/raw/public/buildgrid-time.svg?job=pages) | In memory | 1 | 1 |
+| ![](https://gitlab.com/remote-apis-testing/remote-apis-testing/builds/artifacts/master/raw/public/buildfarm-time.svg?job=pages) | In memory  | 1 | 4 |
+| ![](https://gitlab.com/remote-apis-testing/remote-apis-testing/builds/artifacts/master/raw/public/buildbarn-time.svg?job=pages) | Disk  | 1 | 4 |
+
 
 ### Terraform
 
