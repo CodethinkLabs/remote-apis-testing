@@ -43,7 +43,7 @@ This shows a build of Bazel with Bazel to produce the following timing informati
 | -------------------- | ---------- | ----------- | ---------------------- |
 | ![][bazel-buildgrid] | In memory  | 1           | 1                      |
 | ![][bazel-buildfarm] | In memory  | 1           | 4                      |
-| ![][bazel-buildbarn] | Disk       | 1           | 4                      |
+| ![][bazel-buildbarn] | In memory  | 1           | 4                      |
 
 [bazel-buildgrid]: https://gitlab.com/remote-apis-testing/remote-apis-testing/builds/artifacts/master/raw/public/buildgrid-time.svg?job=pages
 [bazel-buildfarm]: https://gitlab.com/remote-apis-testing/remote-apis-testing/builds/artifacts/master/raw/public/buildfarm-time.svg?job=pages
