@@ -73,6 +73,7 @@ build-docker-bazel-buildgrid-wrapper:
   except:
     changes:
       - "*.md"
+  allow_failure: true
 
 build-buildbarn-remote-execution:
   stage: build-images-and-terraform
@@ -98,6 +99,7 @@ build-buildbarn-remote-execution:
   except:
     changes:
       - "*.md"
+  allow_failure: true
 
 .build-buildbarn-template: &build-buildbarn-template
   stage: build-images-and-terraform
@@ -120,6 +122,7 @@ build-buildbarn-remote-execution:
   except:
     changes:
       - "*.md"
+  allow_failure: true
 
 
 build-buildbarn-storage:
