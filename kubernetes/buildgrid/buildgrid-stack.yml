@@ -16,8 +16,8 @@ spec:
     spec:
       containers:
       - args:
-        - /usr/local/bin/bgd  
-        - server 
+        - /usr/local/bin/bgd
+        - server
         - start
         - /config/artifacts.conf
         image: registry.gitlab.com/buildgrid/buildgrid.hub.docker.com/buildgrid:nightly
@@ -42,7 +42,7 @@ spec:
       - ReadWriteOnce
       resources:
         requests:
-          storage: 12Gi   
+          storage: 12Gi
 ---
 apiVersion: v1
 data:
@@ -56,8 +56,8 @@ data:
 
         storages:
           - !lru-storage &main-storage
-            size: 512MB
-            
+            size: 1GB
+
         services:
           - !action-cache &main-action
             storage: *main-storage
