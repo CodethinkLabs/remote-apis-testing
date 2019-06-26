@@ -19,8 +19,6 @@ spec:
         command:
           - "buildbox-worker"
           - "--instance=main"
-          - "--bots-instance=main"
-          - "--cas-instance=main"
           - "--bots-remote=http://buildgrid-stack:50051"
           - "--cas-remote=http://buildgrid-stack:50051"
           - "--buildbox-run=/usr/local/bin/buildbox-run-hosttools"
